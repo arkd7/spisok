@@ -3,14 +3,155 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<meta name="theme-color" content="#102b45">
+<meta name="theme-color" content="#102c48">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
 <meta name="description" content="Облачный журнал посещаемости. Отметки, история и статистика для старосты.">
-<title>Журнал посещаемости · Облачная версия</title>
+<title>Журнал посещаемости · Староста</title>
 <style>
 :root{font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif;color:#183147;background:#f4f7fa;-webkit-tap-highlight-color:transparent;font-synthesis:none}
 *{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;min-width:320px}button,input,select{font:inherit}button{cursor:pointer}button:disabled{cursor:wait;opacity:.62}button:focus-visible,input:focus-visible,select:focus-visible{outline:3px solid #9ab9f3;outline-offset:2px}a{color:#1266b5}input,select{min-height:46px;border:1px solid #c9d7e3;border-radius:12px;background:#fff;padding:11px 13px;color:#183147;width:100%}input::placeholder{color:#91a1b0}input[type=date]{min-width:0}input[type=search]{background:#fff}.hidden{display:none!important}.muted{color:#64788d}.small{font-size:12px}.medium{font-size:14px}.strong{font-weight:750}.container{width:min(980px,100%);margin:auto;padding:18px 18px 112px}.header{background:#102b45;color:#fff;position:sticky;top:0;z-index:10;box-shadow:0 3px 20px #102b4520}.header-inner{max-width:980px;margin:auto;padding:13px 18px;display:flex;align-items:center;justify-content:space-between;gap:12px}.brand{display:flex;align-items:center;gap:11px}.brand-mark{display:grid;place-items:center;background:#ffffff1c;border:1px solid #ffffff25;width:40px;height:40px;border-radius:13px;font-size:21px}.brand-title{font-weight:850;font-size:17px;letter-spacing:-.3px}.brand-sub{font-size:11px;opacity:.7;margin-top:2px}.header-right{font-size:12px;color:#c0d6e4;text-align:right;max-width:160px;overflow:hidden;text-overflow:ellipsis}.card{background:white;border:1px solid #dfe8ef;border-radius:18px;box-shadow:0 4px 18px #1b45600d;padding:20px}.page-title{font-size:25px;line-height:1.2;margin:4px 0 8px;letter-spacing:-.7px;font-weight:850}.section-title{font-size:17px;font-weight:850;margin:0 0 14px}.section-hint{font-size:13px;color:#698095;margin-top:3px}.split{display:flex;align-items:center;justify-content:space-between;gap:10px}.stack{display:grid;gap:14px}.grid2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}.grid3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}.field{display:grid;gap:7px}.field label{font-size:13px;font-weight:700;color:#425d74}.btn{display:inline-flex;align-items:center;justify-content:center;gap:7px;border:1px solid transparent;border-radius:12px;background:#135d9c;color:#fff;font-weight:750;padding:12px 16px;min-height:46px;transition:background .13s,transform .13s}.btn:active{transform:scale(.985)}.btn:hover{background:#0d4b7f}.btn.secondary{background:#eef4f8;color:#1b567e;border-color:#d9e6ef}.btn.secondary:hover{background:#e5f0f7}.btn.danger{background:#fff1f1;color:#9f3838;border-color:#ffd5d5}.btn.wide{width:100%}.btn.ghost{background:transparent;color:#365a74;border-color:#cbdce8}.btn.ghost:hover{background:#f1f7fa}.note{background:#eef7ff;border:1px solid #c9e5fc;color:#285c7d;padding:12px 14px;border-radius:13px;font-size:13px;line-height:1.55}.notice-danger{background:#fff1f0;border-color:#f3cecb;color:#a3413c}.authwrap{width:min(460px,100%);margin:5vh auto 30px}.auth-hero{text-align:center;margin-bottom:20px}.auth-icon{width:68px;height:68px;border-radius:20px;background:#dcebf8;color:#155987;display:grid;place-items:center;font-size:36px;margin:0 auto 15px}.auth-hero h1{font-size:26px;margin:0 0 8px;letter-spacing:-.8px}.auth-hero p{font-size:14px;line-height:1.6;color:#70869a;margin:0}.tabs{display:grid;grid-template-columns:1fr 1fr;background:#f0f5f8;padding:5px;border-radius:14px;gap:4px;margin-bottom:20px}.tab{background:none;border:0;color:#567082;border-radius:10px;min-height:43px;font-weight:800}.tab.active{background:white;color:#155b91;box-shadow:0 2px 7px #173d591a}.auth-footer{text-align:center;font-size:12px;line-height:1.6;color:#71879a;margin-top:18px}.hero-line{display:flex;align-items:center;gap:10px;flex-wrap:wrap}.pill{display:inline-flex;align-items:center;background:#eaf5f0;color:#24795d;border-radius:99px;padding:5px 9px;font-size:11px;font-weight:800}.dot{width:7px;height:7px;border-radius:100%;background:#3dac79;display:inline-block;margin-right:5px}.panel-control{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:12px}.year-control{max-width:200px}.pair-strip{display:flex;gap:8px;overflow-x:auto;padding:3px 0 8px;scrollbar-width:thin}.pair{border:1px solid #d7e3eb;background:#fff;color:#4b6980;font-weight:800;padding:10px 18px;border-radius:12px;white-space:nowrap;min-width:68px;min-height:44px}.pair.active{background:#0e5e9a;color:white;border-color:#0e5e9a;box-shadow:0 3px 10px #0e5e9a2d}.overview{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}.metric{border-radius:14px;padding:14px 12px;background:#f3f7fa;border:1px solid #e5edf2;min-width:0}.metric .num{font-size:25px;font-weight:850;line-height:1.05;letter-spacing:-.6px}.metric .label{font-size:11px;color:#688196;margin-top:6px;line-height:1.2}.metric.sick{background:#eef4ff}.metric.family{background:#fff6eb}.metric.unknown{background:#fff0f0}.student-list{display:grid;gap:10px}.student{border:1px solid #e0e9ef;border-radius:15px;padding:13px 14px;display:grid;gap:11px;transition:background .12s}.student.absent{background:#fdfafb;border-color:#e9dce0}.student-head{display:flex;justify-content:space-between;gap:12px;align-items:center}.student-name{font-size:15px;font-weight:780;line-height:1.4;overflow-wrap:anywhere}.student-status{font-size:11px;font-weight:800;border-radius:30px;padding:6px 8px;background:#eaf6ee;color:#278253;white-space:nowrap}.student.absent .student-status{background:#ffecef;color:#bd445a}.reason-buttons{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:6px}.reason{font-size:12px;border-radius:10px;min-height:41px;padding:7px 5px;font-weight:760;background:#f5f8fa;border:1px solid #e1e8ed;color:#6b7f8e;line-height:1.25}.reason[data-active="true"]{background:#d8e9f9;color:#135e9a;border-color:#9bc7e8}.reason[data-value="sick"][data-active="true"]{background:#e4eeff;color:#235cbb;border-color:#abc9f6}.reason[data-value="family"][data-active="true"]{background:#fff0dc;color:#aa650b;border-color:#f3c88a}.reason[data-value="unknown"][data-active="true"]{background:#ffe4e7;color:#af4355;border-color:#f0b4be}.top-actions{display:flex;align-items:center;gap:8px;flex-wrap:wrap}.savebar{position:fixed;left:0;right:0;bottom:67px;z-index:8;background:#ffffffef;backdrop-filter:blur(12px);border-top:1px solid #e3ebf1}.savebar-inner{max-width:980px;margin:auto;padding:10px 18px;display:flex;align-items:center;justify-content:space-between;gap:12px}.save-message{font-size:12px;color:#607e91;line-height:1.35}.savebar .btn{min-height:44px;padding:10px 16px}.bottom-nav{position:fixed;left:0;right:0;bottom:0;background:#fff;border-top:1px solid #dce5ec;z-index:9;box-shadow:0 -6px 24px #1e47510d;padding-bottom:env(safe-area-inset-bottom)}.bottom-nav-inner{max-width:680px;margin:auto;display:grid;grid-template-columns:repeat(4,1fr)}.navbtn{border:0;background:none;color:#8293a0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;font-size:11px;font-weight:700;padding:8px 2px;min-height:64px}.navbtn .glyph{font-size:23px;line-height:1}.navbtn.active{color:#0f629c}.history-items{display:grid;gap:9px}.history-item{border:1px solid #e1eaf1;background:#fff;text-align:left;border-radius:13px;display:flex;justify-content:space-between;align-items:center;gap:8px;min-height:66px;padding:12px 14px;color:#183147}.history-item:hover{border-color:#9bc6e6;background:#f6fbff}.history-left{display:grid;gap:5px}.history-left b{font-size:14px}.history-left span{font-size:12px;color:#7590a0}.history-right{display:flex;align-items:center;gap:8px;color:#668398;font-size:12px}.history-badge{border-radius:8px;padding:5px 8px;background:#eaf4fb;color:#2b688a;font-weight:700}.stats-row{display:grid;grid-template-columns:minmax(0,1fr) 56px 56px 56px 56px;align-items:center;gap:6px;border-top:1px solid #e8eff3;padding:13px 0;font-size:13px}.stats-row.head{font-size:11px;color:#7990a2;font-weight:700;border-top:0;padding-top:5px}.stats-row>*:not(:first-child){text-align:center}.stats-row .name{font-weight:720;min-width:0;overflow-wrap:anywhere}.empty{padding:35px 20px;text-align:center;color:#7b8ea2;line-height:1.7;font-size:14px}.empty-emoji{font-size:35px;margin-bottom:12px}.badge-soft{display:inline-block;border:1px solid #dce9f0;border-radius:99px;padding:6px 9px;color:#5c7588;background:#f4f8fa;font-size:12px}.toast{position:fixed;z-index:50;left:50%;transform:translateX(-50%);top:76px;width:min(480px,calc(100% - 24px));background:#153f5e;color:white;padding:13px 18px;border-radius:13px;box-shadow:0 10px 35px #173b5252;font-weight:650;font-size:13px;text-align:center;opacity:0;pointer-events:none;transition:opacity .2s}.toast.show{opacity:1}.loading{opacity:.65;pointer-events:none}.setting-line{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}.info-list{display:grid;gap:13px}.info-list .info-label{font-size:12px;color:#7991a1;margin-bottom:4px}.info-list .info-value{font-weight:720;overflow-wrap:anywhere}.mini-link{font-size:12px;color:#396f96}.hr{height:1px;background:#e8eef2;margin:18px 0}.footer-tip{font-size:12px;color:#8091a1;line-height:1.6;text-align:center;margin-top:16px}
 @media(max-width:620px){.container{padding:14px 12px 144px}.header-inner{padding:11px 14px}.brand-title{font-size:15px}.brand-mark{width:36px;height:36px;border-radius:11px}.page-title{font-size:23px}.card{padding:16px;border-radius:16px}.overview{gap:6px}.metric{padding:12px 7px}.metric .num{font-size:22px}.metric .label{font-size:10px}.panel-control{grid-template-columns:1fr 1fr;gap:9px}.reason{font-size:11px;padding:7px 3px;min-height:43px}.student{padding:13px 11px}.student-name{font-size:14px}.savebar{bottom:calc(64px + env(safe-area-inset-bottom))}.savebar-inner{padding:8px 12px}.save-message{font-size:11px;max-width:60%}.bottom-nav-inner{max-width:none}.stats-row{grid-template-columns:minmax(0,1fr) repeat(4,36px);gap:3px;font-size:11px}.stats-row.head{font-size:10px}.header-right{max-width:95px}.grid3{gap:6px}.grid3>.metric{padding:11px 8px}.authwrap{margin:20px auto 35px}.btn.wide{min-height:50px}}
 @media(max-width:360px){.reason{font-size:10px}.student-name{font-size:13px}.header-right{display:none}}
+
+/* =============================================================
+   Mobile-first polish — v2.1, 2026-11
+   No changes to Cloudflare requests, stored student data or auth.
+   ============================================================= */
+:root { color-scheme: light; }
+html { -webkit-text-size-adjust: 100%; }
+body { background: #f1f5fa; overflow-x: clip; }
+button, input, select { -webkit-appearance: none; appearance: none; }
+button { touch-action: manipulation; }
+button:focus-visible, input:focus-visible, select:focus-visible { outline: 3px solid #82b2ee; outline-offset: 2px; }
+input[type="date"], select { -webkit-appearance: auto; appearance: auto; }
+.header { background: linear-gradient(125deg,#102c48 0%,#164c70 100%); }
+.brand { min-width: 0; }
+.brand > div:last-child { min-width: 0; }
+.brand-title { overflow-wrap: anywhere; }
+.brand-mark { flex: 0 0 auto; }
+.header-right { overflow-wrap: anywhere; }
+.card { box-shadow: 0 5px 22px #183d5810; }
+.btn { -webkit-user-select: none; user-select: none; }
+.btn:active, .navbtn:active, .reason:active, .pair:active { transform: scale(.98); }
+.btn, .reason, .pair { transition: background-color .14s, border-color .14s, transform .1s; }
+.panel-control > *, .split > *, .student-head > * { min-width: 0; }
+.stats-row > * { min-width: 0; }
+input, select { max-width: 100%; }
+.pair-hint { display: none; }
+
+@media (max-width: 700px) {
+  .container { width: 100%; padding: 16px 12px 185px; }
+  .header { position: sticky; top: 0; border-radius: 0 0 18px 18px; }
+  .header-inner { padding: 12px 14px; min-height: 66px; }
+  .brand { gap: 10px; }
+  .brand-mark { width: 40px; height: 40px; border-radius: 13px; font-size: 22px; }
+  .brand-title { font-size: 16px; line-height: 1.15; }
+  .brand-sub { font-size: 11px; opacity: .83; }
+  .header-right { display: none; }
+  .card { padding: 16px; border-radius: 18px; border-color: #e1eaf2; }
+  .stack { gap: 13px; }
+  .page-title { font-size: clamp(22px,6vw,28px); letter-spacing: -.65px; margin: 0; }
+  #appScreen > .split { display: flex; flex-wrap: wrap; align-items: flex-start !important; gap: 10px; margin: 5px 2px 17px !important; }
+  #appScreen > .split > div { flex: 1 1 195px; }
+  #greetLabel { max-width: 100%; font-size: 11px; word-break: break-word; }
+  .hero-line { gap: 8px; }
+  .section-hint { font-size: 13px; line-height: 1.45; }
+  .section-title { font-size: 17px; line-height: 1.28; }
+  .pill { padding: 5px 8px; font-size: 11px; }
+  .card .split { flex-wrap: wrap; align-items: center; }
+  .field { min-width: 0; }
+  .field label { font-size: 13px; }
+  input, select { min-height: 48px; font-size: 16px; border-radius: 12px; }
+  input[type="date"] { min-width: 0; }
+  .btn { min-height: 46px; border-radius: 12px; font-size: 14px; }
+  .panel-control { display: grid; grid-template-columns: minmax(0,1fr) minmax(0,1fr); gap: 10px; }
+  .year-control { width: min(100%,210px); max-width: 210px; }
+  .pair-strip { margin: 0 -3px; padding: 2px 3px 10px; gap: 9px; overscroll-behavior-x: contain; scroll-snap-type: x proximity; -webkit-overflow-scrolling: touch; scrollbar-width: none; }
+  .pair-strip::-webkit-scrollbar { display: none; }
+  .pair-hint { display: block; color: #7891a4; font-size: 11px; line-height: 1.2; margin-top: -7px; }
+  .pair { flex: 0 0 auto; scroll-snap-align: start; min-width: 76px; padding: 11px 12px; min-height: 47px; font-size: 13px; border-radius: 13px; }
+  .overview { grid-template-columns: repeat(2,minmax(0,1fr)); gap: 9px; }
+  .metric { padding: 15px 13px; min-height: 85px; border-radius: 15px; }
+  .metric .num { font-size: 29px; font-variant-numeric: tabular-nums; }
+  .metric .label { font-size: 12px; line-height: 1.3; margin-top: 7px; }
+  .student-list { gap: 10px; }
+  .student { padding: 14px; border-radius: 16px; gap: 12px; background: #fff; box-shadow: 0 2px 8px #102c4807; }
+  .student.absent { background: #fffbfc; }
+  .student-head { gap: 9px; align-items: flex-start; }
+  .student-name { font-size: 15px; line-height: 1.4; font-weight: 780; }
+  .student-status { align-self: flex-start; font-size: 10px; padding: 6px 8px; flex: 0 0 auto; }
+  .reason-buttons { grid-template-columns: repeat(2,minmax(0,1fr)); gap: 8px; }
+  .reason { min-height: 46px; border-radius: 11px; font-size: 13px; padding: 8px 6px; line-height: 1.24; }
+  .reason[data-active="true"] { box-shadow: inset 0 0 0 1px currentColor; }
+  #studentSearch { font-size: 16px; }
+  #clearBtn { flex: 0 0 auto; min-height: 40px; padding: 8px 10px; font-size: 12px; }
+  #journalSaved { font-size: 11px; }
+  .note { font-size: 12px; }
+  .bottom-nav { box-shadow: 0 -5px 23px #102c4813; background: #fff; }
+  .bottom-nav-inner { max-width: none; grid-template-columns: repeat(4,minmax(0,1fr)); padding: 4px 4px 0; }
+  .navbtn { position: relative; min-width: 0; min-height: 62px; padding: 6px 1px 7px; gap: 4px; font-size: 11px; line-height: 1.2; color: #6c8091; border-radius: 11px; }
+  .navbtn .glyph { font-size: 22px; }
+  .navbtn.active { background: #eaf3fc; color: #115991; }
+  .savebar { bottom: calc(70px + env(safe-area-inset-bottom)); background: transparent; border: 0; backdrop-filter: none; box-shadow: none; }
+  .savebar-inner { padding: 0 12px; display: block; }
+  .savebar .save-message { display: none; }
+  .savebar .btn { width: 100%; min-height: 50px; border-radius: 14px; font-size: 15px; font-weight: 800; box-shadow: 0 8px 20px #0b528e45; }
+  .history-item { min-width: 0; padding: 14px 12px; border-radius: 14px; }
+  .history-left { flex: 1 1 auto; min-width: 0; }
+  .history-left b { font-size: 13px; overflow-wrap: anywhere; }
+  .history-left span { font-size: 11px; line-height: 1.35; }
+  .history-right { flex: 0 0 auto; gap: 5px; }
+  .history-badge { font-size: 11px; white-space: nowrap; }
+  .authwrap { margin: 16px auto 40px; padding: 0 2px; }
+  .auth-hero { margin-bottom: 18px; }
+  .auth-icon { width: 60px; height: 60px; border-radius: 19px; font-size: 30px; margin-bottom: 11px; }
+  .auth-hero h1 { font-size: 24px; }
+  .auth-hero p { font-size: 13px; }
+  .tabs { margin-bottom: 16px; }
+  .tab { min-height: 46px; font-size: 14px; }
+  .auth-footer { padding: 0 6px; }
+  .info-value { overflow-wrap: anywhere; }
+  .toast { top: 78px; font-size: 12px; }
+}
+@media (max-width: 450px) {
+  .panel-control { grid-template-columns: minmax(0,1fr); }
+  .overview { gap: 8px; }
+  .stats-row.head { display: none; }
+  .stats-row { display: grid; grid-template-columns: repeat(4,minmax(0,1fr)); gap: 4px; align-items: stretch; margin: 0 0 10px; padding: 12px 9px; border: 1px solid #e1eaf2; border-radius: 13px; background: #fff; font-size: 13px; }
+  .stats-row > .name { grid-column: 1/-1; font-size: 13px; line-height: 1.4; padding: 2px 4px 7px; text-align: left; }
+  .stats-row > :not(.name) { min-width: 0; padding: 8px 1px; border-radius: 8px; text-align: center; background: #f4f8fb; font-variant-numeric: tabular-nums; }
+  .stats-row > :nth-child(2)::before, .stats-row > :nth-child(3)::before, .stats-row > :nth-child(4)::before, .stats-row > :nth-child(5)::before { display: block; font-size: 9px; color: #637a8b; font-weight: 600; margin-bottom: 5px; }
+  .stats-row > :nth-child(2)::before { content: 'Всего'; }
+  .stats-row > :nth-child(3)::before { content: 'Болеет'; }
+  .stats-row > :nth-child(4)::before { content: 'Семья'; }
+  .stats-row > :nth-child(5)::before { content: 'Неизв.'; }
+  .grid3 { grid-template-columns: repeat(3,minmax(0,1fr)); gap: 7px; }
+  .grid3 .metric { padding: 13px 7px; min-height: 84px; }
+  .grid3 .metric .num { font-size: clamp(18px,5.5vw,26px); }
+  .grid3 .metric .label { font-size: 10px; }
+  .historyPage .split { flex-wrap: wrap; }
+  .year-control { width: 100%; max-width: none; }
+  #historyPage .card > .split, #statsPage .card > .split { align-items: stretch; }
+  #historyPage .card > .split > div:first-child, #statsPage .card > .split > div:first-child { flex: 1 1 100%; }
+}
+@media (max-width: 355px) {
+  .container { padding-left: 9px; padding-right: 9px; }
+  .card { padding: 13px; }
+  .student { padding: 11px; }
+  .student-status { font-size: 9px; padding: 6px 6px; }
+  .student-name { font-size: 14px; }
+  .reason { font-size: 12px; }
+  .navbtn { font-size: 10px; }
+  .metric .num { font-size: 26px; }
+}
+@media (min-width: 701px) {
+  .bottom-nav { border-radius: 16px 16px 0 0; }
+}
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { scroll-behavior: auto !important; transition-duration: 0s !important; animation-duration: 0s !important; }
+}
+
 </style>
 </head>
 <body>
@@ -22,7 +163,7 @@
 <section id="appScreen" class="hidden">
  <div class="split" style="align-items:flex-start;margin:4px 2px 18px"><div><div class="hero-line"><h1 class="page-title" id="viewTitle">Посещаемость</h1><span class="pill"><span class="dot"></span>Облако</span></div><div class="section-hint" id="viewHint">Отметьте отсутствующих на выбранной паре</div></div><span id="greetLabel" class="badge-soft"></span></div>
  <div id="journalPage" class="stack">
-  <div class="card stack"><div class="split"><h2 class="section-title" style="margin:0">Выберите пару</h2><span id="journalSaved" class="small muted">Новая запись</span></div><div class="panel-control"><div class="field"><label for="dateInput">Дата занятия</label><input id="dateInput" type="date"></div><div class="field"><label for="yearInput">Учебный год</label><select id="yearInput"></select></div></div><div class="pair-strip" id="pairStrip" aria-label="Выбор номера пары"></div><div id="unsavedNote" class="note hidden">Есть несохранённые изменения. Чтобы не потерять отметки, нажмите «Сохранить пару».</div></div>
+  <div class="card stack"><div class="split"><h2 class="section-title" style="margin:0">Выберите пару</h2><span id="journalSaved" class="small muted">Новая запись</span></div><div class="panel-control"><div class="field"><label for="dateInput">Дата занятия</label><input id="dateInput" type="date"></div><div class="field"><label for="yearInput">Учебный год</label><select id="yearInput"></select></div></div><div class="pair-strip" id="pairStrip" aria-label="Выбор номера пары"></div><div class="pair-hint" aria-hidden="true">↔ Проведите в сторону, чтобы увидеть все 8 пар</div><div id="unsavedNote" class="note hidden">Есть несохранённые изменения. Чтобы не потерять отметки, нажмите «Сохранить пару».</div></div>
   <div class="overview"><div class="metric"><div class="num" id="countPresent">24</div><div class="label">Присутствуют</div></div><div class="metric sick"><div class="num" id="countSick">0</div><div class="label">Болеют</div></div><div class="metric family"><div class="num" id="countFamily">0</div><div class="label">По семейным</div></div><div class="metric unknown"><div class="num" id="countUnknown">0</div><div class="label">Неизвестно</div></div></div>
   <div class="card stack"><div class="split"><div><h2 class="section-title" style="margin:0">Список группы</h2><div id="studentCount" class="section-hint">24 студента</div></div><button class="btn secondary" id="clearBtn" type="button">Все на паре</button></div><input id="studentSearch" type="search" placeholder="Поиск студента…" autocomplete="off"><div id="studentList" class="student-list"></div></div>
  </div>
@@ -37,7 +178,7 @@
 'use strict';
 // ПОСЛЕ настройки Cloudflare впишите сюда адрес вашего Worker без слеша в конце.
 // Пример: const DEFAULT_API_URL = 'https://journal-api.example.workers.dev';
-const DEFAULT_API_URL = '';
+const DEFAULT_API_URL = 'https://spisok-api.arudikov117.workers.dev';
 const REASONS = Object.freeze({sick:'Болеет',family:'По семейным',unknown:'Неизвестно'});
 const $=id=>document.getElementById(id);
 const today=()=>{const d=new Date();return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`};
@@ -46,7 +187,7 @@ const yearLabel=y=>`${y}/${y+1}`;
 const dateRu=d=>new Date(`${d}T12:00:00`).toLocaleDateString('ru-RU',{weekday:'short',day:'numeric',month:'long',year:'numeric'});
 const escapeHtml=str=>String(str??'').replace(/[&<>"']/g,ch=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]));
 const validServer=s=>/^https:\/\/[a-z0-9.-]+\.workers\.dev$/i.test(s.replace(/\/$/,''))||/^https:\/\/[a-z0-9.-]+$/i.test(s.replace(/\/$/,''));
-const state={server:DEFAULT_API_URL.trim()||localStorage.getItem('journal_server')||'',token:localStorage.getItem('journal_token')||'',username:'',mode:'login',page:'journal',year:academicYear(today()),date:today(),pair:1,students:[],lessons:[],absences:[],draft:{},dirty:false,busy:false};
+const state={server:localStorage.getItem('journal_server')||DEFAULT_API_URL.trim(),token:localStorage.getItem('journal_token')||'',username:'',mode:'login',page:'journal',year:academicYear(today()),date:today(),pair:1,students:[],lessons:[],absences:[],draft:{},dirty:false,busy:false};
 function notify(msg){const box=$('toast');box.textContent=msg;box.classList.add('show');clearTimeout(notify.timer);notify.timer=setTimeout(()=>box.classList.remove('show'),3700)}
 function showError(id,msg){$(id).textContent=msg;$(id).classList.toggle('hidden',!msg)}
 function showScreen(name){['setupScreen','authScreen','appScreen'].forEach(x=>$(x).classList.toggle('hidden',x!==name));const logged=name==='appScreen';$('bottomNav').classList.toggle('hidden',!logged);$('savebar').classList.toggle('hidden',!logged||state.page!=='journal');$('accountTag').textContent=logged?('@'+state.username):name==='setupScreen'?'Настройка':'Вход'}
@@ -181,4 +322,5 @@ async function init(){buildYears();$('dateInput').value=state.date;if(!state.ser
 init();
 </script>
 </body>
+</html>
 </html>
