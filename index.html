@@ -152,6 +152,68 @@ input, select { max-width: 100%; }
   *, *::before, *::after { scroll-behavior: auto !important; transition-duration: 0s !important; animation-duration: 0s !important; }
 }
 
+
+/* Mobile date control: display the date independently of the native iOS
+   date widget so its intrinsic width can never overflow the card. */
+.date-control {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  min-height: 49px;
+  padding: 10px 14px;
+  border: 1px solid #c9d7e3;
+  border-radius: 12px;
+  background: #fff;
+  overflow: hidden;
+}
+.date-control:focus-within { outline: 3px solid #82b2ee; outline-offset: 2px; }
+.date-display {
+  display: block;
+  min-width: 0;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  color: #183147;
+  font-size: 16px;
+  font-variant-numeric: tabular-nums;
+  line-height: 1.4;
+}
+.date-icon { flex: 0 0 auto; color: #426b8e; font-size: 19px; line-height: 1; }
+.date-control #dateInput {
+  position: absolute;
+  z-index: 1;
+  inset: 0;
+  display: block;
+  width: 100% !important;
+  min-width: 0 !important;
+  max-width: 100% !important;
+  height: 100% !important;
+  min-height: 0 !important;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  opacity: 0.01;
+  cursor: pointer;
+  font-size: 16px;
+}
+.date-control #dateInput::-webkit-calendar-picker-indicator {
+  position: absolute;
+  inset: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  opacity: 0;
+  cursor: pointer;
+}
+.panel-control > .field { min-width: 0; max-width: 100%; }
+
 </style>
 </head>
 <body>
@@ -163,7 +225,7 @@ input, select { max-width: 100%; }
 <section id="appScreen" class="hidden">
  <div class="split" style="align-items:flex-start;margin:4px 2px 18px"><div><div class="hero-line"><h1 class="page-title" id="viewTitle">Посещаемость</h1><span class="pill"><span class="dot"></span>Облако</span></div><div class="section-hint" id="viewHint">Отметьте отсутствующих на выбранной паре</div></div><span id="greetLabel" class="badge-soft"></span></div>
  <div id="journalPage" class="stack">
-  <div class="card stack"><div class="split"><h2 class="section-title" style="margin:0">Выберите пару</h2><span id="journalSaved" class="small muted">Новая запись</span></div><div class="panel-control"><div class="field"><label for="dateInput">Дата занятия</label><input id="dateInput" type="date"></div><div class="field"><label for="yearInput">Учебный год</label><select id="yearInput"></select></div></div><div class="pair-strip" id="pairStrip" aria-label="Выбор номера пары"></div><div class="pair-hint" aria-hidden="true">↔ Проведите в сторону, чтобы увидеть все 8 пар</div><div id="unsavedNote" class="note hidden">Есть несохранённые изменения. Чтобы не потерять отметки, нажмите «Сохранить пару».</div></div>
+  <div class="card stack"><div class="split"><h2 class="section-title" style="margin:0">Выберите пару</h2><span id="journalSaved" class="small muted">Новая запись</span></div><div class="panel-control"><div class="field"><label for="dateInput">Дата занятия</label><div class="date-control"><span id="dateDisplay" class="date-display" aria-hidden="true">Выберите дату</span><span class="date-icon" aria-hidden="true">▦</span><input id="dateInput" type="date" aria-label="Дата занятия"></div></div><div class="field"><label for="yearInput">Учебный год</label><select id="yearInput"></select></div></div><div class="pair-strip" id="pairStrip" aria-label="Выбор номера пары"></div><div class="pair-hint" aria-hidden="true">↔ Проведите в сторону, чтобы увидеть все 8 пар</div><div id="unsavedNote" class="note hidden">Есть несохранённые изменения. Чтобы не потерять отметки, нажмите «Сохранить пару».</div></div>
   <div class="overview"><div class="metric"><div class="num" id="countPresent">24</div><div class="label">Присутствуют</div></div><div class="metric sick"><div class="num" id="countSick">0</div><div class="label">Болеют</div></div><div class="metric family"><div class="num" id="countFamily">0</div><div class="label">По семейным</div></div><div class="metric unknown"><div class="num" id="countUnknown">0</div><div class="label">Неизвестно</div></div></div>
   <div class="card stack"><div class="split"><div><h2 class="section-title" style="margin:0">Список группы</h2><div id="studentCount" class="section-hint">24 студента</div></div><button class="btn secondary" id="clearBtn" type="button">Все на паре</button></div><input id="studentSearch" type="search" placeholder="Поиск студента…" autocomplete="off"><div id="studentList" class="student-list"></div></div>
  </div>
@@ -185,6 +247,14 @@ const today=()=>{const d=new Date();return `${d.getFullYear()}-${String(d.getMon
 const academicYear=date=>Number(date.slice(5,7))>=9?Number(date.slice(0,4)):Number(date.slice(0,4))-1;
 const yearLabel=y=>`${y}/${y+1}`;
 const dateRu=d=>new Date(`${d}T12:00:00`).toLocaleDateString('ru-RU',{weekday:'short',day:'numeric',month:'long',year:'numeric'});
+const dateDisplayText=d=>{
+ const m=/^(\d{4})-(\d{2})-(\d{2})$/.exec(String(d));
+ if(!m) return 'Выберите дату';
+ return new Intl.DateTimeFormat('ru-RU',{day:'numeric',month:'long',year:'numeric'})
+   .format(new Date(Number(m[1]),Number(m[2])-1,Number(m[3])));
+};
+function refreshDateDisplay(){ $('dateDisplay').textContent=dateDisplayText(state.date); }
+
 const escapeHtml=str=>String(str??'').replace(/[&<>"']/g,ch=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]));
 const validServer=s=>/^https:\/\/[a-z0-9.-]+\.workers\.dev$/i.test(s.replace(/\/$/,''))||/^https:\/\/[a-z0-9.-]+$/i.test(s.replace(/\/$/,''));
 const state={server:localStorage.getItem('journal_server')||DEFAULT_API_URL.trim(),token:localStorage.getItem('journal_token')||'',username:'',mode:'login',page:'journal',year:academicYear(today()),date:today(),pair:1,students:[],lessons:[],absences:[],draft:{},dirty:false,busy:false};
@@ -274,8 +344,8 @@ function renderRoster(){
  list.appendChild(fragment);
 }
 function renderPairs(){const strip=$('pairStrip');strip.replaceChildren();for(let n=1;n<=8;n++){const b=document.createElement('button');b.className='pair'+(n===state.pair?' active':'');b.textContent=n+' пара';b.type='button';b.addEventListener('click',()=>{if(n===state.pair||!canLeave())return;state.pair=n;loadDraft();renderJournal()});strip.append(b)}}
-function renderJournal(){if(!$('dateInput').value||$('dateInput').value!==state.date)$('dateInput').value=state.date;renderPairs();renderCounts();renderRoster()}
-$('dateInput').addEventListener('change',async(e)=>{const next=e.target.value;if(!next||next===state.date)return;if(!canLeave()){e.target.value=state.date;return}state.date=next;const y=academicYear(next);if(y!==state.year){state.year=y;try{await loadYear()}catch(err){notify(err.message)}}else{loadDraft();renderJournal()}});
+function renderJournal(){if(!$('dateInput').value||$('dateInput').value!==state.date)$('dateInput').value=state.date;refreshDateDisplay();renderPairs();renderCounts();renderRoster()}
+$('dateInput').addEventListener('change',async(e)=>{const next=e.target.value;if(!next||next===state.date)return;if(!canLeave()){e.target.value=state.date;return}state.date=next;refreshDateDisplay();const y=academicYear(next);if(y!==state.year){state.year=y;try{await loadYear()}catch(err){notify(err.message)}}else{loadDraft();renderJournal()}});
 $('pairStrip').addEventListener('wheel',e=>{if(Math.abs(e.deltaX)>Math.abs(e.deltaY))return;/* стандартный вертикальный скролл не блокируем */},{passive:true});
 $('studentSearch').addEventListener('input',renderRoster);
 $('clearBtn').addEventListener('click',()=>{if(!Object.keys(state.draft).length)return;if(!confirm('Отметить всех присутствующими на этой паре?'))return;state.draft={};state.dirty=true;renderCounts();renderRoster()});
@@ -308,7 +378,7 @@ $('exportCsvBtn').addEventListener('click',()=>{
  download(`statistika_${state.year}.csv`,'\ufeff'+rows.map(row=>row.map(csvCell).join(';')).join('\r\n'),'text/csv;charset=utf-8');notify('CSV-файл сформирован');
 });
 $('exportJsonBtn').addEventListener('click',()=>{const doc={exportedAt:new Date().toISOString(),year:state.year,username:state.username,students:state.students,lessons:state.lessons,absences:state.absences};download(`journal_backup_${state.year}.json`,JSON.stringify(doc,null,2),'application/json;charset=utf-8');notify('Резервная копия скачана')});
-async function changeYear(next){if(!Number.isInteger(next)||next===state.year)return;if(!canLeave()){updateYearSelectors();return}state.year=next;state.date=next+'-09-01';state.pair=1;$('dateInput').value=state.date;try{await loadYear()}catch(err){notify(err.message)}}
+async function changeYear(next){if(!Number.isInteger(next)||next===state.year)return;if(!canLeave()){updateYearSelectors();return}state.year=next;state.date=next+'-09-01';state.pair=1;$('dateInput').value=state.date;refreshDateDisplay();try{await loadYear()}catch(err){notify(err.message)}}
 ['yearInput','historyYear','statsYear'].forEach(id=>$(id).addEventListener('change',e=>changeYear(Number(e.target.value))));
 function page(name){state.page=name;['journal','history','stats','settings'].forEach(p=>$(p+'Page').classList.toggle('hidden',p!==name));
  document.querySelectorAll('.navbtn').forEach(x=>x.classList.toggle('active',x.dataset.page===name));
@@ -318,9 +388,8 @@ function page(name){state.page=name;['journal','history','stats','settings'].for
 }
 document.querySelectorAll('.navbtn').forEach(btn=>btn.addEventListener('click',()=>{if(btn.dataset.page!==state.page&&!canLeave())return;page(btn.dataset.page)}));
 $('logoutBtn').addEventListener('click',async()=>{if(!canLeave())return;if(!confirm('Выйти из аккаунта на этом устройстве?'))return;try{await api('/api/logout',{method:'POST'})}catch{}state.token='';localStorage.removeItem('journal_token');state.username='';state.students=[];state.lessons=[];state.absences=[];state.draft={};state.dirty=false;showScreen('authScreen');switchAuth('login');notify('Вы вышли из аккаунта')});
-async function init(){buildYears();$('dateInput').value=state.date;if(!state.server){setupScreen();return}if(!state.token){showScreen('authScreen');return}try{await loadYear();showScreen('appScreen');page('journal')}catch(e){if(!state.token)showScreen('authScreen');else{showScreen('authScreen');showError('authError','Не удалось загрузить данные: '+e.message)}}}
+async function init(){buildYears();$('dateInput').value=state.date;refreshDateDisplay();if(!state.server){setupScreen();return}if(!state.token){showScreen('authScreen');return}try{await loadYear();showScreen('appScreen');page('journal')}catch(e){if(!state.token)showScreen('authScreen');else{showScreen('authScreen');showError('authError','Не удалось загрузить данные: '+e.message)}}}
 init();
 </script>
 </body>
-</html>
 </html>
