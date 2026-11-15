@@ -1,470 +1,184 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-<meta charset="UTF-8">
+<meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<meta name="theme-color" content="#f4f7fb">
-<meta name="color-scheme" content="light">
-<title>Журнал посещаемости — группа</title>
+<meta name="theme-color" content="#102b45">
+<meta name="description" content="Облачный журнал посещаемости. Отметки, история и статистика для старосты.">
+<title>Журнал посещаемости · Облачная версия</title>
 <style>
-:root{
-  --bg:#f4f7fb;--surface:#fff;--text:#182b46;--muted:#687990;--border:#e1e8f1;
-  --primary:#2364d8;--primary-soft:#eaf1ff;--primary-dark:#154db0;
-  --green:#157a53;--green-bg:#e6f6ed;--green-border:#b2dfc8;
-  --orange:#9b5a16;--orange-bg:#fff3e5;--orange-border:#f1d2af;
-  --purple:#6c45a1;--purple-bg:#f2edfb;--purple-border:#d7c4f1;
-  --red:#a13b4a;--red-bg:#fff0f1;--red-border:#edc0c5;
-  --shadow:0 6px 26px rgba(28,50,80,.045);
-}
-*{box-sizing:border-box}
-html{-webkit-text-size-adjust:100%;scroll-behavior:smooth}
-body{margin:0;background:var(--bg);color:var(--text);font:15px/1.45 system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif}
-button,input,select{font:inherit}
-button{-webkit-tap-highlight-color:transparent;cursor:pointer;touch-action:manipulation}
-button:disabled{opacity:.55;cursor:not-allowed}
-button:focus-visible,input:focus-visible,select:focus-visible{outline:3px solid #a8c7ff;outline-offset:2px}
-[hidden]{display:none!important}
-.container{max-width:1160px;margin:auto;padding:26px 24px 54px}
-.topbar{display:flex;align-items:center;justify-content:space-between;gap:16px;margin-bottom:22px}
-.topbar h1{font-size:clamp(25px,3vw,34px);line-height:1.12;letter-spacing:-.035em;margin:0 0 7px;font-weight:800}
-.topbar p{color:var(--muted);margin:0;font-size:14px}
-.pill{display:inline-flex;align-items:center;gap:7px;white-space:nowrap;background:var(--primary-soft);color:var(--primary-dark);border:1px solid #d8e5ff;border-radius:999px;padding:8px 13px;font-size:12px;font-weight:750}
-.dot{display:inline-block;width:7px;height:7px;background:#1bbd79;border-radius:50%}
-.panel{background:var(--surface);border:1px solid var(--border);border-radius:18px;box-shadow:var(--shadow)}
-.control-panel{padding:20px}
-.control-header{font-size:13px;font-weight:800;color:#354c6c;margin-bottom:13px}
-.controls{display:grid;grid-template-columns:1.1fr 1.35fr .85fr auto;gap:13px;align-items:end}
-.field{display:flex;flex-direction:column;gap:7px;min-width:0}
-.field label{font-size:12px;font-weight:750;color:#5c6f87}
-.field select,.field input{width:100%;height:48px;border:1px solid #cfd9e7;border-radius:11px;background:#fff;color:var(--text);padding:0 12px;min-width:0;font-size:16px;outline-offset:2px}
-.btn{border:1px solid #d5e0ed;color:var(--text);border-radius:11px;background:#fff;padding:11px 14px;font-size:13px;font-weight:750;display:inline-flex;gap:8px;justify-content:center;align-items:center;min-height:46px;text-decoration:none;line-height:1.25}
-.btn:hover{background:#f8fbff}
-.btn.primary{background:var(--primary);border-color:var(--primary);color:white}
-.btn.primary:hover{background:var(--primary-dark)}
-.btn.danger{color:var(--red);border-color:#edcbd1}
-.btn:active,.choice:active{transform:scale(.985)}
-.summary{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin:14px 0 21px}
-.kpi{background:white;border:1px solid var(--border);border-radius:15px;padding:16px 18px;min-height:100px}
-.kpi span{color:var(--muted);font-size:12px;font-weight:650;display:block;line-height:1.3}
-.kpi strong{display:block;font-size:30px;line-height:1.1;margin-top:8px;font-variant-numeric:tabular-nums;letter-spacing:-.04em}
-.kpi.total strong{color:var(--primary)}.kpi.sick strong{color:var(--orange)}.kpi.family strong{color:var(--purple)}.kpi.unknown strong{color:var(--red)}
-.navigation{display:flex;gap:7px;margin-bottom:14px}
-.nav-btn{border:1px solid var(--border);border-radius:12px;background:white;color:var(--muted);font-weight:750;padding:12px 18px;min-height:47px;display:inline-flex;align-items:center;gap:9px}
-.nav-btn[aria-current="page"]{background:var(--primary);border-color:var(--primary);color:white}
-.nav-icon{font-size:18px;line-height:1}
-.view{display:none}.view.active{display:block}
-.content-panel{padding:22px}
-.section-head{display:flex;align-items:flex-start;justify-content:space-between;gap:14px;margin-bottom:17px}
-.section-head h2{font-size:21px;letter-spacing:-.025em;line-height:1.25;margin:0 0 5px}
-.subtle{font-size:13px;color:var(--muted);margin:0}
-.state-chip{display:inline-flex;align-items:center;gap:5px;border-radius:9px;padding:7px 10px;border:1px solid #d7e8ff;background:#f0f6ff;color:#2459a4;font-weight:750;font-size:12px;white-space:nowrap}
-.state-chip.unsaved{background:#fff8ec;color:#8e611e;border-color:#f4dfb6}
-.filterbar{display:flex;align-items:center;gap:10px;margin-bottom:16px;flex-wrap:wrap}
-.search{height:46px;flex:1 1 240px;min-width:0;border-radius:11px;padding:0 14px;border:1px solid #d5dfeb;background:#fff;font-size:16px}
-.filter-switch{white-space:nowrap;display:inline-flex;align-items:center;gap:8px;color:#53677f;font-weight:700;font-size:13px;min-height:44px;cursor:pointer}
-.filter-switch input{appearance:none;width:39px;height:23px;border-radius:999px;background:#ccd7e5;position:relative;margin:0;flex:none;transition:background .15s}
-.filter-switch input:checked{background:var(--primary)}
-.filter-switch input:before{content:"";position:absolute;left:3px;top:3px;width:17px;height:17px;border-radius:50%;background:white;box-shadow:0 1px 3px #0002;transition:transform .15s}
-.filter-switch input:checked:before{transform:translateX(16px)}
-.filter-switch input:focus-visible{outline:3px solid #a8c7ff;outline-offset:2px}
-.countline{margin-bottom:12px;font-size:12px;color:#748399;font-weight:650}
-.students{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
-.student{border:1px solid var(--border);border-radius:14px;background:#fff;padding:15px;min-width:0;transition:border-color .15s,background .15s}
-.student.is-absent{border-color:#eadadd;background:#fffdfd}
-.student-top{display:flex;align-items:flex-start;gap:11px;margin-bottom:13px}
-.number{display:flex;align-items:center;justify-content:center;border-radius:9px;color:#71849c;background:#f1f5fa;font-size:12px;font-weight:800;width:29px;height:29px;flex-shrink:0;font-variant-numeric:tabular-nums}
-.name-wrap{min-width:0;flex:1}
-.student-name{font-size:14px;line-height:1.35;font-weight:750;display:block;overflow-wrap:anywhere}
-.student-status{font-size:11px;color:#7d8ca0;margin-top:4px;display:block;font-weight:650}
-.student.is-absent .student-status{color:var(--red)}
-.choice-set{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:6px}
-.choice{border:1px solid #dbe4ee;border-radius:9px;min-width:0;min-height:44px;background:white;font-size:11px;padding:7px 3px;line-height:1.18;color:#53647c;font-weight:700;white-space:normal}
-.choice[aria-pressed="true"]{font-weight:800;border-width:1.5px}
-.choice.present[aria-pressed="true"]{background:var(--green-bg);border-color:var(--green-border);color:var(--green)}
-.choice.sick[aria-pressed="true"]{background:var(--orange-bg);border-color:var(--orange-border);color:var(--orange)}
-.choice.family[aria-pressed="true"]{background:var(--purple-bg);border-color:var(--purple-border);color:var(--purple)}
-.choice.unknown[aria-pressed="true"]{background:var(--red-bg);border-color:var(--red-border);color:var(--red)}
-.lesson-actions{display:flex;flex-wrap:wrap;gap:9px;margin-top:20px;padding-top:18px;border-top:1px solid var(--border)}
-.save-line{color:var(--muted);font-size:12px;margin:14px 0 0;line-height:1.5}
-.save-line.error{color:#b53543;font-weight:750}
-.empty{padding:34px 16px;border-radius:12px;color:var(--muted);background:#f8faff;text-align:center;font-size:14px}
-.report-overview{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:11px;margin-bottom:18px}
-.overview-box{background:#f6f9fe;border:1px solid var(--border);padding:14px;border-radius:12px}
-.overview-box small{display:block;color:var(--muted);font-size:12px}.overview-box strong{display:block;font-size:24px;font-variant-numeric:tabular-nums;margin-top:3px}
-.report-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:11px}
-.report-card{padding:13px 14px;border:1px solid var(--border);border-radius:12px;background:#fff}
-.report-card-head{display:flex;gap:9px;align-items:center;justify-content:space-between;margin-bottom:11px}
-.report-card .report-name{font-size:13px;font-weight:750;line-height:1.32}
-.total-badge{display:inline-flex;align-items:center;justify-content:center;background:#edf3fe;color:#2553a8;font-size:14px;font-weight:800;border-radius:9px;padding:6px 9px;flex-shrink:0;min-width:31px}
-.report-bits{display:grid;grid-template-columns:repeat(3,1fr);gap:6px}
-.report-bit{background:#f8fafd;border-radius:7px;padding:8px 5px;text-align:center}
-.report-bit small{display:block;font-size:10px;line-height:1.2;color:var(--muted)}
-.report-bit b{font-size:16px;line-height:1.4;font-variant-numeric:tabular-nums}
-.report-foot{font-size:11px;color:var(--muted);margin-top:9px}
-.history-list{display:grid;gap:10px}
-.history-item{display:flex;align-items:center;gap:12px;border:1px solid var(--border);border-radius:12px;padding:14px;text-align:left;background:white;width:100%;color:var(--text)}
-.history-item:hover{background:#f8faff;border-color:#b7ceff}
-.history-item .history-body{flex:1;min-width:0}
-.history-item strong{font-size:14px;display:block;line-height:1.3}
-.history-item small{display:block;font-size:12px;margin-top:3px;color:var(--muted)}
-.history-count{background:#edf3ff;color:#235cba;border-radius:8px;font-weight:800;font-size:12px;padding:8px 9px;white-space:nowrap}
-.info{background:#f2f7ff;border:1px solid #dce8fa;border-radius:12px;padding:15px 16px;color:#465f7f;font-size:13px;line-height:1.6}
-.data-actions{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin:16px 0}
-.data-actions .btn{width:100%;min-height:55px}
-hr{border:0;border-top:1px solid var(--border);margin:20px 0}
-#fileImport{display:none}
-.footer{text-align:center;font-size:12px;color:#92a0b0;margin-top:24px}
-.toast{position:fixed;z-index:99;left:50%;bottom:28px;transform:translateX(-50%);min-width:180px;max-width:min(92vw,470px);padding:12px 18px;border-radius:12px;color:white;background:#22364f;box-shadow:0 10px 35px #15263c44;font-size:13px;font-weight:650;text-align:center;pointer-events:none;opacity:0;transition:opacity .2s}
-.toast.show{opacity:1}
-@media(min-width:850px){.student{padding:16px}.choice{font-size:12px}}
-@media(max-width:840px){.controls{grid-template-columns:repeat(2,minmax(0,1fr))}.controls .today-btn{width:100%}.students{grid-template-columns:1fr 1fr}.choice-set{grid-template-columns:repeat(2,minmax(0,1fr))}.choice{font-size:12px}.report-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
-@media(max-width:630px){
-  .container{padding:18px 12px calc(100px + env(safe-area-inset-bottom))}
-  .topbar{margin:2px 2px 16px;align-items:flex-start;gap:7px}
-  .topbar h1{font-size:25px;margin-bottom:4px}
-  .topbar p{font-size:12px}
-  .topbar .pill{padding:6px 9px;font-size:10px;align-self:flex-start}
-  .panel{border-radius:15px}
-  .control-panel{padding:14px}
-  .control-header{margin-bottom:10px}
-  .controls{gap:10px}
-  .field label{font-size:11px}
-  .field select,.field input{height:48px}
-  .controls .date-field{grid-column:1/3;grid-row:1}
-  .controls .year-field{grid-column:1}
-  .controls .lesson-field{grid-column:2}
-  .controls .today-btn{grid-column:1/3}
-  .summary{gap:8px;margin:11px 0 13px;grid-template-columns:repeat(2,minmax(0,1fr))}
-  .kpi{min-height:82px;padding:12px 13px;border-radius:12px}
-  .kpi span{font-size:11px}
-  .kpi strong{font-size:27px;margin-top:5px}
-  .navigation{position:fixed;z-index:60;bottom:0;left:0;right:0;margin:0;gap:0;background:#fff;border-top:1px solid var(--border);box-shadow:0 -8px 25px #273e6114;padding:6px 6px calc(7px + env(safe-area-inset-bottom));display:grid;grid-template-columns:repeat(4,minmax(0,1fr))}
-  .nav-btn{border:0;border-radius:10px;background:none;min-width:0;min-height:57px;padding:7px 3px;display:flex;flex-direction:column;gap:3px;justify-content:center;font-size:10px;line-height:1.15}
-  .nav-btn[aria-current="page"]{background:var(--primary-soft);color:var(--primary-dark);border:0}
-  .nav-icon{font-size:21px}
-  .content-panel{padding:15px}
-  .section-head{margin-bottom:12px}
-  .section-head h2{font-size:19px}
-  .state-chip{font-size:10px;padding:6px 7px}
-  .students{grid-template-columns:1fr;gap:8px}
-  .student{padding:13px;border-radius:12px}
-  .student-top{margin-bottom:10px}
-  .choice-set{grid-template-columns:repeat(4,minmax(0,1fr))}
-  .choice{font-size:11px}
-  .lesson-actions{gap:8px}
-  .lesson-actions .btn{flex:1 1 44%;padding:11px 7px}
-  .report-grid{grid-template-columns:1fr}
-  .report-overview{gap:7px}
-  .overview-box{padding:10px}
-  .overview-box small{font-size:10px}
-  .overview-box strong{font-size:22px}
-  .footer{margin-top:20px}
-  .toast{bottom:calc(87px + env(safe-area-inset-bottom))}
-}
-@media(max-width:420px){
-  .topbar{display:block}.topbar .pill{display:none}
-  .choice-set{grid-template-columns:repeat(2,minmax(0,1fr))}
-  .choice{font-size:12px;min-height:44px}
-  .data-actions{grid-template-columns:1fr}
-}
-@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}*,*:before,*:after{transition:none!important}}
-@media print{
-  body{background:white}.container{max-width:none;padding:0}.topbar .pill,.control-panel,.summary,.navigation,.filterbar,.lesson-actions,.footer,.data-actions,.save-line,.toast{display:none!important}
-  .panel{box-shadow:none;border:0}.content-panel{padding:0}.view:not(.active){display:none!important}.student,.report-card{break-inside:avoid}
-  .students,.report-grid{grid-template-columns:repeat(2,1fr)}
-}
+:root{font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif;color:#183147;background:#f4f7fa;-webkit-tap-highlight-color:transparent;font-synthesis:none}
+*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;min-width:320px}button,input,select{font:inherit}button{cursor:pointer}button:disabled{cursor:wait;opacity:.62}button:focus-visible,input:focus-visible,select:focus-visible{outline:3px solid #9ab9f3;outline-offset:2px}a{color:#1266b5}input,select{min-height:46px;border:1px solid #c9d7e3;border-radius:12px;background:#fff;padding:11px 13px;color:#183147;width:100%}input::placeholder{color:#91a1b0}input[type=date]{min-width:0}input[type=search]{background:#fff}.hidden{display:none!important}.muted{color:#64788d}.small{font-size:12px}.medium{font-size:14px}.strong{font-weight:750}.container{width:min(980px,100%);margin:auto;padding:18px 18px 112px}.header{background:#102b45;color:#fff;position:sticky;top:0;z-index:10;box-shadow:0 3px 20px #102b4520}.header-inner{max-width:980px;margin:auto;padding:13px 18px;display:flex;align-items:center;justify-content:space-between;gap:12px}.brand{display:flex;align-items:center;gap:11px}.brand-mark{display:grid;place-items:center;background:#ffffff1c;border:1px solid #ffffff25;width:40px;height:40px;border-radius:13px;font-size:21px}.brand-title{font-weight:850;font-size:17px;letter-spacing:-.3px}.brand-sub{font-size:11px;opacity:.7;margin-top:2px}.header-right{font-size:12px;color:#c0d6e4;text-align:right;max-width:160px;overflow:hidden;text-overflow:ellipsis}.card{background:white;border:1px solid #dfe8ef;border-radius:18px;box-shadow:0 4px 18px #1b45600d;padding:20px}.page-title{font-size:25px;line-height:1.2;margin:4px 0 8px;letter-spacing:-.7px;font-weight:850}.section-title{font-size:17px;font-weight:850;margin:0 0 14px}.section-hint{font-size:13px;color:#698095;margin-top:3px}.split{display:flex;align-items:center;justify-content:space-between;gap:10px}.stack{display:grid;gap:14px}.grid2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}.grid3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}.field{display:grid;gap:7px}.field label{font-size:13px;font-weight:700;color:#425d74}.btn{display:inline-flex;align-items:center;justify-content:center;gap:7px;border:1px solid transparent;border-radius:12px;background:#135d9c;color:#fff;font-weight:750;padding:12px 16px;min-height:46px;transition:background .13s,transform .13s}.btn:active{transform:scale(.985)}.btn:hover{background:#0d4b7f}.btn.secondary{background:#eef4f8;color:#1b567e;border-color:#d9e6ef}.btn.secondary:hover{background:#e5f0f7}.btn.danger{background:#fff1f1;color:#9f3838;border-color:#ffd5d5}.btn.wide{width:100%}.btn.ghost{background:transparent;color:#365a74;border-color:#cbdce8}.btn.ghost:hover{background:#f1f7fa}.note{background:#eef7ff;border:1px solid #c9e5fc;color:#285c7d;padding:12px 14px;border-radius:13px;font-size:13px;line-height:1.55}.notice-danger{background:#fff1f0;border-color:#f3cecb;color:#a3413c}.authwrap{width:min(460px,100%);margin:5vh auto 30px}.auth-hero{text-align:center;margin-bottom:20px}.auth-icon{width:68px;height:68px;border-radius:20px;background:#dcebf8;color:#155987;display:grid;place-items:center;font-size:36px;margin:0 auto 15px}.auth-hero h1{font-size:26px;margin:0 0 8px;letter-spacing:-.8px}.auth-hero p{font-size:14px;line-height:1.6;color:#70869a;margin:0}.tabs{display:grid;grid-template-columns:1fr 1fr;background:#f0f5f8;padding:5px;border-radius:14px;gap:4px;margin-bottom:20px}.tab{background:none;border:0;color:#567082;border-radius:10px;min-height:43px;font-weight:800}.tab.active{background:white;color:#155b91;box-shadow:0 2px 7px #173d591a}.auth-footer{text-align:center;font-size:12px;line-height:1.6;color:#71879a;margin-top:18px}.hero-line{display:flex;align-items:center;gap:10px;flex-wrap:wrap}.pill{display:inline-flex;align-items:center;background:#eaf5f0;color:#24795d;border-radius:99px;padding:5px 9px;font-size:11px;font-weight:800}.dot{width:7px;height:7px;border-radius:100%;background:#3dac79;display:inline-block;margin-right:5px}.panel-control{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:12px}.year-control{max-width:200px}.pair-strip{display:flex;gap:8px;overflow-x:auto;padding:3px 0 8px;scrollbar-width:thin}.pair{border:1px solid #d7e3eb;background:#fff;color:#4b6980;font-weight:800;padding:10px 18px;border-radius:12px;white-space:nowrap;min-width:68px;min-height:44px}.pair.active{background:#0e5e9a;color:white;border-color:#0e5e9a;box-shadow:0 3px 10px #0e5e9a2d}.overview{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}.metric{border-radius:14px;padding:14px 12px;background:#f3f7fa;border:1px solid #e5edf2;min-width:0}.metric .num{font-size:25px;font-weight:850;line-height:1.05;letter-spacing:-.6px}.metric .label{font-size:11px;color:#688196;margin-top:6px;line-height:1.2}.metric.sick{background:#eef4ff}.metric.family{background:#fff6eb}.metric.unknown{background:#fff0f0}.student-list{display:grid;gap:10px}.student{border:1px solid #e0e9ef;border-radius:15px;padding:13px 14px;display:grid;gap:11px;transition:background .12s}.student.absent{background:#fdfafb;border-color:#e9dce0}.student-head{display:flex;justify-content:space-between;gap:12px;align-items:center}.student-name{font-size:15px;font-weight:780;line-height:1.4;overflow-wrap:anywhere}.student-status{font-size:11px;font-weight:800;border-radius:30px;padding:6px 8px;background:#eaf6ee;color:#278253;white-space:nowrap}.student.absent .student-status{background:#ffecef;color:#bd445a}.reason-buttons{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:6px}.reason{font-size:12px;border-radius:10px;min-height:41px;padding:7px 5px;font-weight:760;background:#f5f8fa;border:1px solid #e1e8ed;color:#6b7f8e;line-height:1.25}.reason[data-active="true"]{background:#d8e9f9;color:#135e9a;border-color:#9bc7e8}.reason[data-value="sick"][data-active="true"]{background:#e4eeff;color:#235cbb;border-color:#abc9f6}.reason[data-value="family"][data-active="true"]{background:#fff0dc;color:#aa650b;border-color:#f3c88a}.reason[data-value="unknown"][data-active="true"]{background:#ffe4e7;color:#af4355;border-color:#f0b4be}.top-actions{display:flex;align-items:center;gap:8px;flex-wrap:wrap}.savebar{position:fixed;left:0;right:0;bottom:67px;z-index:8;background:#ffffffef;backdrop-filter:blur(12px);border-top:1px solid #e3ebf1}.savebar-inner{max-width:980px;margin:auto;padding:10px 18px;display:flex;align-items:center;justify-content:space-between;gap:12px}.save-message{font-size:12px;color:#607e91;line-height:1.35}.savebar .btn{min-height:44px;padding:10px 16px}.bottom-nav{position:fixed;left:0;right:0;bottom:0;background:#fff;border-top:1px solid #dce5ec;z-index:9;box-shadow:0 -6px 24px #1e47510d;padding-bottom:env(safe-area-inset-bottom)}.bottom-nav-inner{max-width:680px;margin:auto;display:grid;grid-template-columns:repeat(4,1fr)}.navbtn{border:0;background:none;color:#8293a0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;font-size:11px;font-weight:700;padding:8px 2px;min-height:64px}.navbtn .glyph{font-size:23px;line-height:1}.navbtn.active{color:#0f629c}.history-items{display:grid;gap:9px}.history-item{border:1px solid #e1eaf1;background:#fff;text-align:left;border-radius:13px;display:flex;justify-content:space-between;align-items:center;gap:8px;min-height:66px;padding:12px 14px;color:#183147}.history-item:hover{border-color:#9bc6e6;background:#f6fbff}.history-left{display:grid;gap:5px}.history-left b{font-size:14px}.history-left span{font-size:12px;color:#7590a0}.history-right{display:flex;align-items:center;gap:8px;color:#668398;font-size:12px}.history-badge{border-radius:8px;padding:5px 8px;background:#eaf4fb;color:#2b688a;font-weight:700}.stats-row{display:grid;grid-template-columns:minmax(0,1fr) 56px 56px 56px 56px;align-items:center;gap:6px;border-top:1px solid #e8eff3;padding:13px 0;font-size:13px}.stats-row.head{font-size:11px;color:#7990a2;font-weight:700;border-top:0;padding-top:5px}.stats-row>*:not(:first-child){text-align:center}.stats-row .name{font-weight:720;min-width:0;overflow-wrap:anywhere}.empty{padding:35px 20px;text-align:center;color:#7b8ea2;line-height:1.7;font-size:14px}.empty-emoji{font-size:35px;margin-bottom:12px}.badge-soft{display:inline-block;border:1px solid #dce9f0;border-radius:99px;padding:6px 9px;color:#5c7588;background:#f4f8fa;font-size:12px}.toast{position:fixed;z-index:50;left:50%;transform:translateX(-50%);top:76px;width:min(480px,calc(100% - 24px));background:#153f5e;color:white;padding:13px 18px;border-radius:13px;box-shadow:0 10px 35px #173b5252;font-weight:650;font-size:13px;text-align:center;opacity:0;pointer-events:none;transition:opacity .2s}.toast.show{opacity:1}.loading{opacity:.65;pointer-events:none}.setting-line{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}.info-list{display:grid;gap:13px}.info-list .info-label{font-size:12px;color:#7991a1;margin-bottom:4px}.info-list .info-value{font-weight:720;overflow-wrap:anywhere}.mini-link{font-size:12px;color:#396f96}.hr{height:1px;background:#e8eef2;margin:18px 0}.footer-tip{font-size:12px;color:#8091a1;line-height:1.6;text-align:center;margin-top:16px}
+@media(max-width:620px){.container{padding:14px 12px 144px}.header-inner{padding:11px 14px}.brand-title{font-size:15px}.brand-mark{width:36px;height:36px;border-radius:11px}.page-title{font-size:23px}.card{padding:16px;border-radius:16px}.overview{gap:6px}.metric{padding:12px 7px}.metric .num{font-size:22px}.metric .label{font-size:10px}.panel-control{grid-template-columns:1fr 1fr;gap:9px}.reason{font-size:11px;padding:7px 3px;min-height:43px}.student{padding:13px 11px}.student-name{font-size:14px}.savebar{bottom:calc(64px + env(safe-area-inset-bottom))}.savebar-inner{padding:8px 12px}.save-message{font-size:11px;max-width:60%}.bottom-nav-inner{max-width:none}.stats-row{grid-template-columns:minmax(0,1fr) repeat(4,36px);gap:3px;font-size:11px}.stats-row.head{font-size:10px}.header-right{max-width:95px}.grid3{gap:6px}.grid3>.metric{padding:11px 8px}.authwrap{margin:20px auto 35px}.btn.wide{min-height:50px}}
+@media(max-width:360px){.reason{font-size:10px}.student-name{font-size:13px}.header-right{display:none}}
 </style>
 </head>
 <body>
+<header class="header"><div class="header-inner"><div class="brand"><div class="brand-mark">📋</div><div><div class="brand-title">Журнал посещаемости</div><div class="brand-sub">Облачная версия · Староста</div></div></div><div class="header-right" id="accountTag">Без подключения</div></div></header>
+<div id="toast" class="toast" role="status" aria-live="polite"></div>
 <main class="container">
-  <header class="topbar">
-    <div><h1>Журнал посещаемости</h1><p>Учёт пропусков по парам · 24 студента</p></div>
-    <span class="pill"><span class="dot"></span> Сохраняется на устройстве</span>
-  </header>
-
-  <section class="panel control-panel" aria-label="Выбор занятия">
-    <div class="control-header">Выберите занятие</div>
-    <div class="controls">
-      <div class="field year-field"><label for="year">Учебный год</label><select id="year"></select></div>
-      <div class="field date-field"><label for="date">Дата</label><input id="date" type="date" required></div>
-      <div class="field lesson-field"><label for="lesson">Пара</label><select id="lesson"></select></div>
-      <button class="btn today-btn" id="today" type="button">↪ Сегодня</button>
-    </div>
-  </section>
-
-  <div class="summary" aria-label="Статистика текущей пары">
-    <div class="kpi total"><span>Всего отсутствует</span><strong id="total">0</strong></div>
-    <div class="kpi sick"><span>Болеет</span><strong id="sick">0</strong></div>
-    <div class="kpi family"><span>По семейным</span><strong id="family">0</strong></div>
-    <div class="kpi unknown"><span>Причина неизвестна</span><strong id="unknown">0</strong></div>
-  </div>
-
-  <nav class="navigation" aria-label="Разделы">
-    <button type="button" class="nav-btn" data-view="journal" aria-current="page"><span class="nav-icon" aria-hidden="true">▦</span><span>Журнал</span></button>
-    <button type="button" class="nav-btn" data-view="history"><span class="nav-icon" aria-hidden="true">◷</span><span>История</span></button>
-    <button type="button" class="nav-btn" data-view="report"><span class="nav-icon" aria-hidden="true">▥</span><span>Статистика</span></button>
-    <button type="button" class="nav-btn" data-view="data"><span class="nav-icon" aria-hidden="true">⇩</span><span>Данные</span></button>
-  </nav>
-
-  <section class="view active panel content-panel" id="journal" aria-label="Журнал на выбранной паре">
-    <div class="section-head">
-      <div><h2 id="lessonTitle">Отметки на паре</h2><p class="subtle" id="lessonSubtitle">Выберите причину для отсутствующих</p></div>
-      <span id="recordState" class="state-chip unsaved">Не отмечена</span>
-    </div>
-    <div class="filterbar">
-      <input id="studentSearch" type="search" class="search" aria-label="Поиск студента" placeholder="Поиск по фамилии или имени…" autocomplete="off">
-      <label class="filter-switch"><input type="checkbox" id="absentOnly"><span>Только отсутствующие</span></label>
-    </div>
-    <div class="countline" id="studentCount">24 студента</div>
-    <div id="students" class="students"></div>
-    <div class="lesson-actions">
-      <button id="allPresent" type="button" class="btn primary">✓ Все присутствуют</button>
-      <button id="copy" type="button" class="btn">⧉ Скопировать отсутствующих</button>
-      <button id="removeLesson" type="button" class="btn danger">Удалить запись о паре</button>
-    </div>
-    <p id="saveStatus" class="save-line" role="status">Изменения сохраняются автоматически. Если никто не отсутствует, нажмите «Все присутствуют».</p>
-  </section>
-
-  <section class="view panel content-panel" id="history" aria-label="История занятий">
-    <div class="section-head"><div><h2>История занятий</h2><p id="historySubtitle" class="subtle">Все отмеченные пары выбранного учебного года</p></div></div>
-    <div id="historyList" class="history-list"></div>
-  </section>
-
-  <section class="view panel content-panel" id="report" aria-label="Статистика за учебный год">
-    <div class="section-head"><div><h2>Статистика за год</h2><p id="reportSubtitle" class="subtle">Пропущенные пары каждого студента</p></div></div>
-    <div class="report-overview">
-      <div class="overview-box"><small>Учтено пар</small><strong id="allLessons">0</strong></div>
-      <div class="overview-box"><small>Пропусков всего</small><strong id="allAbsences">0</strong></div>
-      <div class="overview-box"><small>Посещаемость</small><strong id="attendancePercent">—</strong></div>
-    </div>
-    <div id="reportRows" class="report-grid"></div>
-    <p class="save-line">Если студент пропустил несколько пар в один день, каждая пара учитывается отдельно. Процент рассчитывается только по отмеченным парам.</p>
-  </section>
-
-  <section class="view panel content-panel" id="data" aria-label="Экспорт и резервное копирование">
-    <div class="section-head"><div><h2>Экспорт и сохранение</h2><p class="subtle">Скачайте результаты или перенесите журнал на другое устройство</p></div></div>
-    <div class="info"><strong>Важная информация.</strong> Журнал работает без интернета и сервера. Данные хранятся в браузере данного устройства. При очистке данных браузера они могут исчезнуть. Регулярно скачивайте резервную копию JSON.</div>
-    <div class="data-actions">
-      <button class="btn primary" id="csvSummary" type="button">↓ Статистика CSV для Excel</button>
-      <button class="btn" id="csvDetailed" type="button">↓ Все отметки CSV</button>
-      <button class="btn" id="backup" type="button">↓ Резервная копия JSON</button>
-      <button class="btn" id="restore" type="button">↑ Восстановить из JSON</button>
-    </div>
-    <input id="fileImport" type="file" accept=".json,application/json">
-    <hr>
-    <p class="subtle">Восстановление заменяет все текущие записи журнала, поэтому перед импортом рекомендуется скачать резервную копию.</p>
-  </section>
-  <div class="footer">Журнал посещаемости · локальное хранение · без регистрации</div>
+<section id="setupScreen" class="authwrap hidden"><div class="auth-hero"><div class="auth-icon">☁️</div><h1>Подключение к облаку</h1><p>Однократно укажите адрес Cloudflare Worker, в котором работает база данных журнала.</p></div><div class="card stack"><div class="field"><label for="setupUrl">Адрес Cloudflare Worker</label><input id="setupUrl" type="url" placeholder="https://journal-api.имя.workers.dev" autocomplete="url" spellcheck="false"></div><div id="setupError" class="note notice-danger hidden"></div><button class="btn wide" id="setupBtn">Проверить и подключить</button><div class="note">Адрес заканчивается на <b>.workers.dev</b>. Его выдаёт Cloudflare после публикации Worker. Пароли и отметки здесь не хранятся.</div></div></section>
+<section id="authScreen" class="authwrap hidden"><div class="auth-hero"><div class="auth-icon">🔒</div><h1>Добро пожаловать</h1><p>Войдите в журнал или зарегистрируйте аккаунт старосты. Данные будут доступны с любого устройства.</p></div><div class="card"><div class="tabs"><button id="loginTab" class="tab active" type="button">Вход</button><button id="regTab" class="tab" type="button">Регистрация</button></div><form id="authForm" class="stack" autocomplete="on"><div class="field"><label for="authLogin">Логин старосты</label><input id="authLogin" minlength="3" maxlength="32" placeholder="Например, starosta2026" autocomplete="username" required pattern="[A-Za-z0-9._-]{3,32}"></div><div class="field"><label for="authPassword">Пароль</label><input id="authPassword" type="password" placeholder="Не менее 10 символов" autocomplete="current-password" minlength="10" maxlength="256" required></div><div class="field hidden" id="repeatField"><label for="authRepeat">Повторите пароль</label><input id="authRepeat" type="password" autocomplete="new-password" minlength="10" maxlength="256"></div><div class="field hidden" id="inviteField"><label for="authInvite">Код регистрации</label><input id="authInvite" placeholder="Секретный код из Cloudflare" autocomplete="off" spellcheck="false"></div><div id="authError" class="note notice-danger hidden" role="alert"></div><button id="authSubmit" class="btn wide" type="submit">Войти в журнал</button><button class="btn secondary wide" id="changeServerBtn" type="button">Изменить адрес сервера</button></form></div><div class="auth-footer">Пароль не публикуется в GitHub. Не сообщайте код регистрации и пароль другим лицам.<br>Без доступа к аккаунту восстановление пароля не автоматизировано.</div></section>
+<section id="appScreen" class="hidden">
+ <div class="split" style="align-items:flex-start;margin:4px 2px 18px"><div><div class="hero-line"><h1 class="page-title" id="viewTitle">Посещаемость</h1><span class="pill"><span class="dot"></span>Облако</span></div><div class="section-hint" id="viewHint">Отметьте отсутствующих на выбранной паре</div></div><span id="greetLabel" class="badge-soft"></span></div>
+ <div id="journalPage" class="stack">
+  <div class="card stack"><div class="split"><h2 class="section-title" style="margin:0">Выберите пару</h2><span id="journalSaved" class="small muted">Новая запись</span></div><div class="panel-control"><div class="field"><label for="dateInput">Дата занятия</label><input id="dateInput" type="date"></div><div class="field"><label for="yearInput">Учебный год</label><select id="yearInput"></select></div></div><div class="pair-strip" id="pairStrip" aria-label="Выбор номера пары"></div><div id="unsavedNote" class="note hidden">Есть несохранённые изменения. Чтобы не потерять отметки, нажмите «Сохранить пару».</div></div>
+  <div class="overview"><div class="metric"><div class="num" id="countPresent">24</div><div class="label">Присутствуют</div></div><div class="metric sick"><div class="num" id="countSick">0</div><div class="label">Болеют</div></div><div class="metric family"><div class="num" id="countFamily">0</div><div class="label">По семейным</div></div><div class="metric unknown"><div class="num" id="countUnknown">0</div><div class="label">Неизвестно</div></div></div>
+  <div class="card stack"><div class="split"><div><h2 class="section-title" style="margin:0">Список группы</h2><div id="studentCount" class="section-hint">24 студента</div></div><button class="btn secondary" id="clearBtn" type="button">Все на паре</button></div><input id="studentSearch" type="search" placeholder="Поиск студента…" autocomplete="off"><div id="studentList" class="student-list"></div></div>
+ </div>
+ <div id="historyPage" class="stack hidden"><div class="card stack"><div class="split"><div><h2 class="section-title" style="margin:0">История занятий</h2><p class="section-hint">Сохраняются и пары, на которых все присутствовали</p></div><div class="year-control"><select id="historyYear"></select></div></div><div id="historyList" class="history-items"></div></div></div>
+ <div id="statsPage" class="stack hidden"><div class="card stack"><div class="split"><div><h2 class="section-title" style="margin:0">Статистика за год</h2><p class="section-hint">По сохранённым парам</p></div><div class="year-control"><select id="statsYear"></select></div></div><div class="grid3"><div class="metric"><div id="totalLessons" class="num">0</div><div class="label">Всего пар</div></div><div class="metric"><div id="totalAbsences" class="num">0</div><div class="label">Пропусков</div></div><div class="metric"><div id="avgAttendance" class="num">—</div><div class="label">Посещаемость</div></div></div><div class="split" style="margin-top:5px"><span class="medium strong">По студентам</span><span class="small muted">Всего · Б · С · Н</span></div><div id="statsTable"></div><button class="btn secondary wide" id="exportCsvBtn">Скачать статистику CSV</button></div></div>
+ <div id="settingsPage" class="stack hidden"><div class="card stack"><h2 class="section-title">Мой аккаунт</h2><div class="info-list"><div><div class="info-label">Логин старосты</div><div id="settingsLogin" class="info-value">—</div></div><div><div class="info-label">Сервер</div><div id="settingsServer" class="info-value small">—</div></div><div><div class="info-label">Сохранение</div><div class="info-value">Cloudflare D1 · между устройствами</div></div></div><button class="btn danger wide" id="logoutBtn">Выйти из аккаунта</button></div><div class="card stack"><h2 class="section-title" style="margin:0">Резервная копия</h2><p class="medium muted" style="margin:0;line-height:1.55">Экспортируйте журнал в JSON, чтобы сохранить отдельную копию. Файлы могут содержать персональные данные студентов.</p><button class="btn secondary wide" id="exportJsonBtn">Скачать резервную копию JSON</button><div class="note">Перед заменой старой версии сайта сохраните её данные отдельно. Отметки из прежнего локального журнала в облачную базу автоматически не переносятся.</div></div><div class="card stack"><h2 class="section-title" style="margin:0">Подключение</h2><button class="btn ghost wide" id="settingsChangeServerBtn">Изменить Cloudflare Worker</button><div class="section-hint">При смене сервера потребуется повторный вход.</div></div></div>
+ </section>
 </main>
-<div class="toast" id="toast" role="status" aria-live="polite"></div>
+<div id="savebar" class="savebar hidden"><div class="savebar-inner"><div class="save-message" id="saveMessage">Изменения не сохранены</div><button id="saveBtn" class="btn" type="button">☁️ Сохранить пару</button></div></div>
+<nav class="bottom-nav hidden" id="bottomNav" aria-label="Разделы журнала"><div class="bottom-nav-inner"><button class="navbtn active" data-page="journal"><span class="glyph">📋</span>Журнал</button><button class="navbtn" data-page="history"><span class="glyph">🗓️</span>История</button><button class="navbtn" data-page="stats"><span class="glyph">📊</span>Статистика</button><button class="navbtn" data-page="settings"><span class="glyph">⚙️</span>Данные</button></div></nav>
 <script>
-(()=>{'use strict';
-  const NAMES=[
-    'Бружев Рамиль Альбертович','Гиголов Владик Самвелович',
-    'Готовцев Владимир Андреевич','Гричаниченко Арсений Дмитриевич',
-    'Долманова Кристина Алексеевна','Запорожцев Виталий Владимирович',
-    'Зарицкий Александр Сергеевич','Зыза Вячеслав Максимович',
-    'Иванов Константин Витальевич','Кехян Артур Арегович',
-    'Коротин Павел Сергеевич','Лисогорский Александр Александрович',
-    'Меркулов Артем Денисович','Посулько Иван Павлович',
-    'Прис Анастасия Олеговна','Равцова Татьяна Константиновна',
-    'Расихина Анастасия Александровна','Рокотова София Ивановна',
-    'Рудиков Андрей Сергеевич','Рыбалко Сергей Владимирович',
-    'Тимов Аслан Чишмаевич','Филатов Владислав Алексеевич',
-    'Хантимиров Ильдар Маратович','Чобанян Мери Галустовна'
-  ];
-  const KEY='group-attendance-2026-v1'; // Совместимость с предыдущей версией файла
-  const OPTIONS={present:'Присутствует',sick:'Болеет',family:'По семейным',unknown:'Неизвестно'};
-  const $=id=>document.getElementById(id);
-  let records={},activeView='journal',savedOK=true,toastTimer;
-  const pad=v=>String(v).padStart(2,'0');
-  const dateISO=d=>`${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}`;
-  const academicYear=d=>d.getFullYear()-(d.getMonth()<8?1:0);
-  function dateValid(s){if(!/^\d{4}-\d{2}-\d{2}$/.test(s))return false;const d=new Date(`${s}T12:00:00`);return !Number.isNaN(d.getTime())&&dateISO(d)===s;}
-  const inYear=(s,y)=>s>=`${y}-09-01`&&s<=`${y+1}-08-31`;
-  const year=()=>Number($('year').value);
-  const entryKey=()=>`${$('date').value}|${$('lesson').value}`;
-  const entry=()=>records[entryKey()]||{};
-  const hasEntry=()=>Object.prototype.hasOwnProperty.call(records,entryKey());
-  const formatDate=s=>new Date(`${s}T12:00:00`).toLocaleDateString('ru-RU',{day:'numeric',month:'long',weekday:'short'});
-  const yearEntries=()=>Object.entries(records).filter(([key])=>inYear(key.slice(0,10),year())).sort(([a],[b])=>b.localeCompare(a));
-  function normalize(obj){
-    if(!obj||typeof obj!=='object'||Array.isArray(obj))throw Error('Некорректный формат записей');
-    const result={};
-    for(const [key,val] of Object.entries(obj)){
-      const m=/^(\d{4}-\d{2}-\d{2})\|([1-8])$/.exec(key);
-      if(!m||!dateValid(m[1])||!val||typeof val!=='object'||Array.isArray(val))continue;
-      const clean={};
-      for(const [id,reason] of Object.entries(val))if(/^(?:[0-9]|1[0-9]|2[0-3])$/.test(id)&&['sick','family','unknown'].includes(reason))clean[id]=reason;
-      result[key]=clean; // Пустая запись = все присутствуют (пара учтена)
-    }
-    return result;
+'use strict';
+// ПОСЛЕ настройки Cloudflare впишите сюда адрес вашего Worker без слеша в конце.
+// Пример: const DEFAULT_API_URL = 'https://journal-api.example.workers.dev';
+const DEFAULT_API_URL = '';
+const REASONS = Object.freeze({sick:'Болеет',family:'По семейным',unknown:'Неизвестно'});
+const $=id=>document.getElementById(id);
+const today=()=>{const d=new Date();return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`};
+const academicYear=date=>Number(date.slice(5,7))>=9?Number(date.slice(0,4)):Number(date.slice(0,4))-1;
+const yearLabel=y=>`${y}/${y+1}`;
+const dateRu=d=>new Date(`${d}T12:00:00`).toLocaleDateString('ru-RU',{weekday:'short',day:'numeric',month:'long',year:'numeric'});
+const escapeHtml=str=>String(str??'').replace(/[&<>"']/g,ch=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]));
+const validServer=s=>/^https:\/\/[a-z0-9.-]+\.workers\.dev$/i.test(s.replace(/\/$/,''))||/^https:\/\/[a-z0-9.-]+$/i.test(s.replace(/\/$/,''));
+const state={server:DEFAULT_API_URL.trim()||localStorage.getItem('journal_server')||'',token:localStorage.getItem('journal_token')||'',username:'',mode:'login',page:'journal',year:academicYear(today()),date:today(),pair:1,students:[],lessons:[],absences:[],draft:{},dirty:false,busy:false};
+function notify(msg){const box=$('toast');box.textContent=msg;box.classList.add('show');clearTimeout(notify.timer);notify.timer=setTimeout(()=>box.classList.remove('show'),3700)}
+function showError(id,msg){$(id).textContent=msg;$(id).classList.toggle('hidden',!msg)}
+function showScreen(name){['setupScreen','authScreen','appScreen'].forEach(x=>$(x).classList.toggle('hidden',x!==name));const logged=name==='appScreen';$('bottomNav').classList.toggle('hidden',!logged);$('savebar').classList.toggle('hidden',!logged||state.page!=='journal');$('accountTag').textContent=logged?('@'+state.username):name==='setupScreen'?'Настройка':'Вход'}
+async function api(path,{method='GET',data=null,authenticated=true}={}){
+ if(!state.server)throw new Error('Не указан адрес сервера');
+ const headers={};if(data!==null)headers['Content-Type']='application/json';
+ if(authenticated&&state.token)headers.Authorization='Bearer '+state.token;
+ let response;
+ try {response=await fetch(state.server+path,{method,headers,body:data!==null?JSON.stringify(data):undefined,cache:'no-store',mode:'cors'});}
+ catch {throw new Error('Нет связи с сервером. Проверьте адрес Worker и интернет.');}
+ const json=await response.json().catch(()=>({error:'Неверный ответ сервера'}));
+ if(!response.ok){
+  if(response.status===401&&authenticated&&state.token){state.token='';localStorage.removeItem('journal_token');showScreen('authScreen')}
+  throw new Error(json.error||('Ошибка '+response.status));
+ }
+ return json;
+}
+function setupScreen(){showScreen('setupScreen');$('setupUrl').value=state.server;showError('setupError','')}
+$('setupBtn').addEventListener('click',async()=>{
+ const server=$('setupUrl').value.trim().replace(/\/+$/,'');
+ if(!validServer(server)){showError('setupError','Нужен HTTPS-адрес Cloudflare Worker, например https://journal-api.x.workers.dev');return}
+ const btn=$('setupBtn');btn.disabled=true;btn.textContent='Подключение…';showError('setupError','');
+ try{const res=await fetch(server+'/api/health',{cache:'no-store'});const data=await res.json();if(!res.ok||!data.ok||data.database!=='connected')throw new Error(data.error||'База данных не подключена');
+  state.server=server;localStorage.setItem('journal_server',server);state.token='';localStorage.removeItem('journal_token');showScreen('authScreen');notify('Облачная база подключена');
+ }catch(e){showError('setupError','Не удалось подключиться: '+e.message)}finally{btn.disabled=false;btn.textContent='Проверить и подключить'}
+});
+function switchAuth(mode){state.mode=mode;$('loginTab').classList.toggle('active',mode==='login');$('regTab').classList.toggle('active',mode==='register');$('repeatField').classList.toggle('hidden',mode!=='register');$('inviteField').classList.toggle('hidden',mode!=='register');$('authRepeat').required=mode==='register';$('authInvite').required=mode==='register';$('authPassword').autocomplete=mode==='register'?'new-password':'current-password';$('authSubmit').textContent=mode==='register'?'Создать аккаунт':'Войти в журнал';showError('authError','')}
+$('loginTab').addEventListener('click',()=>switchAuth('login'));
+$('regTab').addEventListener('click',()=>switchAuth('register'));
+$('changeServerBtn').addEventListener('click',setupScreen);
+$('settingsChangeServerBtn').addEventListener('click',()=>{if(!canLeave())return;setupScreen()});
+const bytesToHex=b=>Array.from(new Uint8Array(b),x=>x.toString(16).padStart(2,'0')).join('');
+const randomSalt=()=>bytesToHex(crypto.getRandomValues(new Uint8Array(16)));
+async function deriveProof(password,salt){
+ if(!crypto.subtle)throw new Error('Необходимо использовать HTTPS');
+ const key=await crypto.subtle.importKey('raw',new TextEncoder().encode(password),'PBKDF2',false,['deriveBits']);
+ const saltBytes=Uint8Array.from(salt.match(/.{2}/g),v=>parseInt(v,16));
+ const bits=await crypto.subtle.deriveBits({name:'PBKDF2',salt:saltBytes,iterations:450000,hash:'SHA-256'},key,256);
+ return bytesToHex(bits);
+}
+$('authForm').addEventListener('submit',async(e)=>{
+ e.preventDefault();const username=$('authLogin').value.trim().toLowerCase(),password=$('authPassword').value;
+ if(password.length<10){showError('authError','Пароль должен содержать не менее 10 символов');return}
+ if(state.mode==='register'&&password!==$('authRepeat').value){showError('authError','Пароли не совпадают');return}
+ showError('authError','');const btn=$('authSubmit');btn.disabled=true;btn.textContent='Проверка…';
+ try{
+  if(state.mode==='register'){
+   const salt=randomSalt(),proof=await deriveProof(password,salt);
+   await api('/api/register',{method:'POST',data:{username,salt,proof,regCode:$('authInvite').value.trim()},authenticated:false});
+   $('authPassword').value='';$('authRepeat').value='';$('authInvite').value='';switchAuth('login');notify('Аккаунт создан. Теперь войдите.');
+  }else{
+   const found=await api('/api/salt?username='+encodeURIComponent(username),{authenticated:false});
+   const proof=await deriveProof(password,found.salt);
+   const res=await api('/api/login',{method:'POST',data:{username,proof},authenticated:false});
+   state.username=res.username;state.token=res.token;localStorage.setItem('journal_token',res.token);$('authPassword').value='';
+   await loadYear();showScreen('appScreen');page('journal');notify('Вход выполнен. Данные загружены из облака.');
   }
-  function showToast(message){
-    $('toast').textContent=message;$('toast').classList.add('show');clearTimeout(toastTimer);
-    toastTimer=setTimeout(()=>$('toast').classList.remove('show'),2100);
-  }
-  function load(){
-    try{const raw=localStorage.getItem(KEY);if(raw)records=normalize(JSON.parse(raw));}
-    catch(err){savedOK=false;$('saveStatus').textContent='Ошибка чтения сохранённых данных. Проверьте настройки браузера.';$('saveStatus').classList.add('error');}
-  }
-  function save(){
-    try{localStorage.setItem(KEY,JSON.stringify(records));savedOK=true;$('saveStatus').textContent='✓ Отметки сохранены на этом устройстве';$('saveStatus').classList.remove('error');}
-    catch(err){savedOK=false;$('saveStatus').textContent='Не удалось сохранить отметки! Скачайте резервную копию JSON.';$('saveStatus').classList.add('error');showToast('Ошибка хранения данных');}
-  }
-  function setYear(y){
-    if(![...$('year').options].some(o=>o.value===String(y)))$('year').add(new Option(`${y}/${y+1}`,String(y)));
-    $('year').value=String(y);$('date').min=`${y}-09-01`;$('date').max=`${y+1}-08-31`;
-  }
-  function renderSummary(){
-    const counts={sick:0,family:0,unknown:0};
-    Object.values(entry()).forEach(reason=>{if(reason in counts)counts[reason]++;});
-    for(const r of Object.keys(counts))$(r).textContent=counts[r];
-    $('total').textContent=counts.sick+counts.family+counts.unknown;
-  }
-  function node(tag,cls,text){const el=document.createElement(tag);if(cls)el.className=cls;if(text!==undefined)el.textContent=text;return el;}
-  function renderStudents(){
-    const row=entry();const phrase=$('studentSearch').value.trim().toLocaleLowerCase('ru');const only=$('absentOnly').checked;
-    const list=NAMES.map((name,id)=>({name,id,status:row[id]||'present'}))
-      .filter(p=>(!phrase||p.name.toLocaleLowerCase('ru').includes(phrase))&&(!only||p.status!=='present'));
-    const area=$('students');area.replaceChildren();
-    $('studentCount').textContent=`Показано: ${list.length} из ${NAMES.length} · присутствуют: ${NAMES.length-Object.keys(row).length}`;
-    if(!list.length){area.append(node('div','empty',only?'На этой паре отсутствующих нет.':'Студенты не найдены.'));return;}
-    const fragment=document.createDocumentFragment();
-    list.forEach(({name,id,status})=>{
-      const card=node('article','student'+(status==='present'?'':' is-absent'));
-      const top=node('div','student-top');top.append(node('span','number',String(id+1)));
-      const nameBox=node('div','name-wrap');nameBox.append(node('span','student-name',name),node('span','student-status',status==='present'?'На паре':OPTIONS[status]));top.append(nameBox);card.append(top);
-      const choiceSet=node('div','choice-set');choiceSet.setAttribute('role','group');choiceSet.setAttribute('aria-label',`Посещаемость: ${name}`);
-      for(const [reason,label] of Object.entries(OPTIONS)){
-        const b=node('button','choice '+reason,label);b.type='button';b.dataset.id=String(id);b.dataset.reason=reason;b.setAttribute('aria-pressed',String(status===reason));choiceSet.append(b);
-      }
-      card.append(choiceSet);fragment.append(card);
-    });
-    area.append(fragment);
-  }
-  function renderJournal(){
-    const date=$('date').value;const pair=$('lesson').value;
-    $('lessonTitle').textContent=`${pair}-я пара · ${formatDate(date)}`;
-    $('lessonSubtitle').textContent='Выберите причину отсутствия или отметьте «Присутствует»';
-    $('recordState').textContent=hasEntry()?'✓ Пара отмечена':'Не отмечена';
-    $('recordState').classList.toggle('unsaved',!hasEntry());
-    $('removeLesson').disabled=!hasEntry();
-    renderSummary();renderStudents();
-  }
-  function aggregation(){
-    const lessons=yearEntries();
-    const rows=NAMES.map((name,id)=>({name,id,sick:0,family:0,unknown:0,total:0}));
-    for(const [,info] of lessons)for(const [id,reason] of Object.entries(info))if(rows[+id]&&['sick','family','unknown'].includes(reason)){rows[+id][reason]++;rows[+id].total++;}
-    const total=rows.reduce((sum,r)=>sum+r.total,0);
-    return {rows,total,lessonCount:lessons.length};
-  }
-  function renderReport(){
-    const {rows,total,lessonCount}=aggregation();
-    $('reportSubtitle').textContent=`Учебный год ${year()}/${year()+1} · учтены только сохранённые пары`;
-    $('allLessons').textContent=lessonCount;$('allAbsences').textContent=total;
-    $('attendancePercent').textContent=lessonCount?`${Math.round(100*(1-total/(lessonCount*NAMES.length)))}%`:'—';
-    const area=$('reportRows');area.replaceChildren();const fragment=document.createDocumentFragment();
-    rows.forEach(({name,id,sick,family,unknown,total})=>{
-      const c=node('article','report-card'),head=node('div','report-card-head');
-      head.append(node('span','report-name',`${id+1}. ${name}`),node('span','total-badge',String(total)));c.append(head);
-      const bits=node('div','report-bits');
-      for(const [caption,value] of [['Болеет',sick],['Семейные',family],['Неизвестно',unknown]]){
-        const part=node('div','report-bit');part.append(node('small','',caption),node('b','',String(value)));bits.append(part);
-      }
-      c.append(bits);c.append(node('div','report-foot',`Присутствовал: ${Math.max(0,lessonCount-total)} из ${lessonCount} учтённых пар`));fragment.append(c);
-    });area.append(fragment);
-  }
-  function renderHistory(){
-    const entries=yearEntries();$('historySubtitle').textContent=`Учебный год ${year()}/${year()+1} · записей: ${entries.length}`;
-    const area=$('historyList');area.replaceChildren();
-    if(!entries.length){area.append(node('div','empty','Отметок за этот учебный год пока нет. Откройте «Журнал», чтобы начать.'));return;}
-    for(const [key,absent] of entries){
-      const [date,pair]=key.split('|');const count=Object.keys(absent).length;
-      const b=node('button','history-item');b.type='button';b.dataset.date=date;b.dataset.pair=pair;
-      const center=node('div','history-body');center.append(node('strong','',`${formatDate(date)} · ${pair}-я пара`),node('small','',count?'Нажмите, чтобы открыть и изменить':'Все присутствовали'));
-      b.append(center,node('span','history-count',`${count} отсутств.`),node('span','', '›'));area.append(b);
-    }
-  }
-  function switchView(view,scroll=true){
-    activeView=view;document.querySelectorAll('.nav-btn').forEach(b=>{if(b.dataset.view===view)b.setAttribute('aria-current','page');else b.removeAttribute('aria-current');});
-    document.querySelectorAll('.view').forEach(el=>el.classList.toggle('active',el.id===view));
-    if(view==='journal')renderJournal();if(view==='history')renderHistory();if(view==='report')renderReport();
-    if(scroll)window.scrollTo({top:0,behavior:'instant'});
-  }
-  function mark(id,reason){
-    const key=entryKey();const current={...entry()};
-    if(reason==='present')delete current[id];else current[id]=reason;
-    records[key]=current;save();renderJournal();
-  }
-  function download(filename,body,type){
-    const blob=new Blob([body],{type});const url=URL.createObjectURL(blob);const a=document.createElement('a');
-    a.href=url;a.download=filename;document.body.append(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),5000);
-  }
-  const quote=s=>'"'+String(s).replace(/"/g,'""')+'"';
-  function csv(rows){return '\ufeff'+rows.map(row=>row.map(quote).join(';')).join('\r\n');}
-  function exportSummary(){
-    const rows=[['№','ФИО','Болеет','По семейным','Неизвестно','Пропущено пар','Присутствовал пар']];const data=aggregation();
-    data.rows.forEach((r,i)=>rows.push([i+1,r.name,r.sick,r.family,r.unknown,r.total,data.lessonCount-r.total]));
-    download(`статистика_${year()}-${year()+1}.csv`,csv(rows),'text/csv;charset=utf-8');showToast('Статистика скачана');
-  }
-  function exportDetailed(){
-    const rows=[['Дата','Пара','№','ФИО','Статус']];
-    yearEntries().sort(([a],[b])=>a.localeCompare(b)).forEach(([key,val])=>{
-      const [date,pair]=key.split('|');NAMES.forEach((name,id)=>rows.push([date,pair,id+1,name,OPTIONS[val[id]||'present']]));
-    });
-    download(`отметки_${year()}-${year()+1}.csv`,csv(rows),'text/csv;charset=utf-8');showToast('Отметки скачаны');
-  }
-  async function copyAbsent(){
-    const absent=Object.entries(entry()).map(([id,status])=>`${NAMES[+id]} — ${OPTIONS[status]}`);
-    const text=`Отсутствующие · ${$('date').value} · ${$('lesson').value}-я пара\n${absent.join('\n')||'Отсутствующих нет'}`;
-    try{await navigator.clipboard.writeText(text);showToast('Список скопирован');}
-    catch(err){const t=document.createElement('textarea');t.value=text;t.style.position='fixed';t.style.opacity='0';document.body.append(t);t.select();let ok=false;try{ok=document.execCommand('copy');}catch(e){}t.remove();if(ok)showToast('Список скопирован');else prompt('Скопируйте список:',text);}
-  }
-  function init(){
-    load();const today=new Date(),currentYear=academicYear(today);
-    for(let y=Math.min(2024,currentYear-3);y<=Math.max(2030,currentYear+3);y++)$('year').add(new Option(`${y}/${y+1}`,String(y)));
-    for(let p=1;p<=8;p++)$('lesson').add(new Option(`${p}-я пара`,String(p)));
-    setYear(currentYear);$('date').value=dateISO(today);$('lesson').value='1';
-    $('year').addEventListener('change',()=>{const y=year();setYear(y);if(!inYear($('date').value,y))$('date').value=`${y}-09-01`;refresh();});
-    $('date').addEventListener('change',()=>{if(!dateValid($('date').value)||!inYear($('date').value,year())){$('date').value=`${year()}-09-01`;showToast('Выберите дату внутри учебного года');}refresh();});
-    $('lesson').addEventListener('change',refresh);
-    $('today').addEventListener('click',()=>{const d=new Date();setYear(academicYear(d));$('date').value=dateISO(d);switchView('journal');});
-    $('studentSearch').addEventListener('input',renderStudents);
-    $('absentOnly').addEventListener('change',renderStudents);
-    $('students').addEventListener('click',e=>{const b=e.target.closest('button[data-id]');if(b)mark(b.dataset.id,b.dataset.reason);});
-    document.querySelectorAll('.nav-btn').forEach(b=>b.addEventListener('click',()=>switchView(b.dataset.view)));
-    $('allPresent').addEventListener('click',()=>{
-      if(Object.keys(entry()).length&&!confirm('Отметить всех присутствующими? Текущие причины отсутствия будут удалены.'))return;
-      records[entryKey()]={};save();renderJournal();showToast('Все присутствуют · пара сохранена');
-    });
-    $('removeLesson').addEventListener('click',()=>{
-      if(!hasEntry())return;
-      if(confirm('Удалить запись выбранной пары полностью? Это действие нельзя отменить.')){delete records[entryKey()];save();renderJournal();showToast('Запись удалена');}
-    });
-    $('copy').addEventListener('click',copyAbsent);
-    $('historyList').addEventListener('click',e=>{const b=e.target.closest('button[data-date]');if(!b)return;$('date').value=b.dataset.date;$('lesson').value=b.dataset.pair;switchView('journal');});
-    $('csvSummary').addEventListener('click',exportSummary);
-    $('csvDetailed').addEventListener('click',exportDetailed);
-    $('backup').addEventListener('click',()=>{
-      download(`копия_журнала_${dateISO(new Date())}.json`,JSON.stringify({type:'attendance-backup',version:1,exportedAt:new Date().toISOString(),records},null,2),'application/json;charset=utf-8');showToast('Резервная копия скачана');
-    });
-    $('restore').addEventListener('click',()=>$('fileImport').click());
-    $('fileImport').addEventListener('change',async e=>{
-      const file=e.target.files?.[0];if(!file)return;
-      try{
-        if(file.size>5*1024*1024)throw Error('Файл слишком большой (максимум 5 МБ).');
-        const obj=JSON.parse(await file.text());if(obj.type!=='attendance-backup'||obj.version!==1||!obj.records)throw Error('Файл не является резервной копией журнала.');
-        const imported=normalize(obj.records);
-        if(!confirm(`Заменить все текущие отметки? В копии ${Object.keys(imported).length} занятий. Действие нельзя отменить.`))return;
-        records=imported;save();refresh();showToast('Копия восстановлена');
-      }catch(err){alert('Ошибка загрузки: '+err.message);}finally{e.target.value='';}
-    });
-    refresh();if(!savedOK){$('saveStatus').textContent='Не удалось прочитать локальное хранилище. Проверьте настройки браузера.';$('saveStatus').classList.add('error');}
-  }
-  function refresh(){renderSummary();if(activeView==='journal')renderJournal();else if(activeView==='history')renderHistory();else if(activeView==='report')renderReport();}
-  init();
-})();
+ }catch(err){showError('authError',err.message)}finally{btn.disabled=false;btn.textContent=state.mode==='register'?'Создать аккаунт':'Войти в журнал'}
+});
+function buildYears(){const max=Math.max(new Date().getFullYear()+2,state.year+1);['yearInput','historyYear','statsYear'].forEach(id=>{$(id).innerHTML='';for(let y=max;y>=2024;y--){const opt=document.createElement('option');opt.value=y;opt.textContent=yearLabel(y);$(id).append(opt)}$(id).value=state.year})}
+function updateYearSelectors(){['yearInput','historyYear','statsYear'].forEach(id=>$(id).value=state.year)}
+async function loadYear(){
+ const result=await api('/api/init?year='+state.year);
+ state.username=result.username;state.students=result.students||[];state.lessons=result.lessons||[];state.absences=result.absences||[];
+ $('greetLabel').textContent='@'+state.username;$('settingsLogin').textContent=state.username;$('settingsServer').textContent=state.server;
+ buildYears();updateYearSelectors();loadDraft();renderJournal();renderHistory();renderStats();
+}
+function lessonKey(date=state.date,pair=state.pair){return date+'#'+pair}
+function savedLesson(date=state.date,pair=state.pair){return state.lessons.find(l=>l.date===date&&l.pair===pair)}
+function loadDraft(){state.draft={};for(const a of state.absences.filter(a=>a.date===state.date&&a.pair===state.pair))state.draft[a.studentId]=a.reason;state.dirty=false}
+function canLeave(){if(!state.dirty)return true;return confirm('Отметки этой пары не сохранены в облаке. Продолжить без сохранения?')}
+function countDraft(){const values=Object.values(state.draft);return {sick:values.filter(x=>x==='sick').length,family:values.filter(x=>x==='family').length,unknown:values.filter(x=>x==='unknown').length,present:state.students.length-values.length}}
+function renderCounts(){const c=countDraft();['Present','Sick','Family','Unknown'].forEach((x,i)=>$("count"+x).textContent=[c.present,c.sick,c.family,c.unknown][i]);$('unsavedNote').classList.toggle('hidden',!state.dirty);$('journalSaved').textContent=state.dirty?'● Изменено':savedLesson()?'✓ Сохранено':'Новая запись';$('saveMessage').textContent=state.dirty?'Есть несохранённые изменения':savedLesson()?'✓ Пара сохранена в облаке':'Пара ещё не отмечена'}
+function renderRoster(){
+ const list=$('studentList');list.replaceChildren();const query=$('studentSearch').value.trim().toLocaleLowerCase('ru');
+ const students=state.students.filter(s=>s.name.toLocaleLowerCase('ru').includes(query));$('studentCount').textContent=`${students.length} из ${state.students.length} студентов`;
+ if(!students.length){const div=document.createElement('div');div.className='empty';div.textContent='По вашему запросу студенты не найдены';list.append(div);return}
+ const fragment=document.createDocumentFragment();
+ for(const s of students){const reason=state.draft[s.id]||'';const div=document.createElement('article');div.className='student'+(reason?' absent':'');
+  div.innerHTML=`<div class="student-head"><div class="student-name">${escapeHtml(s.name)}</div><span class="student-status">${reason?'Отсутствует':'Присутствует'}</span></div><div class="reason-buttons">${[['','✓ На паре'],['sick','Болеет'],['family','По семейным'],['unknown','Неизвестно']].map(([r,t])=>`<button type="button" class="reason" data-value="${r}" data-active="${(r||'')===reason}" aria-pressed="${(r||'')===reason}">${t}</button>`).join('')}</div>`;
+  div.querySelectorAll('.reason').forEach(btn=>btn.addEventListener('click',()=>{const v=btn.dataset.value;if(v)state.draft[s.id]=v;else delete state.draft[s.id];state.dirty=true;renderCounts();renderRoster()}));
+  fragment.appendChild(div);
+ }
+ list.appendChild(fragment);
+}
+function renderPairs(){const strip=$('pairStrip');strip.replaceChildren();for(let n=1;n<=8;n++){const b=document.createElement('button');b.className='pair'+(n===state.pair?' active':'');b.textContent=n+' пара';b.type='button';b.addEventListener('click',()=>{if(n===state.pair||!canLeave())return;state.pair=n;loadDraft();renderJournal()});strip.append(b)}}
+function renderJournal(){if(!$('dateInput').value||$('dateInput').value!==state.date)$('dateInput').value=state.date;renderPairs();renderCounts();renderRoster()}
+$('dateInput').addEventListener('change',async(e)=>{const next=e.target.value;if(!next||next===state.date)return;if(!canLeave()){e.target.value=state.date;return}state.date=next;const y=academicYear(next);if(y!==state.year){state.year=y;try{await loadYear()}catch(err){notify(err.message)}}else{loadDraft();renderJournal()}});
+$('pairStrip').addEventListener('wheel',e=>{if(Math.abs(e.deltaX)>Math.abs(e.deltaY))return;/* стандартный вертикальный скролл не блокируем */},{passive:true});
+$('studentSearch').addEventListener('input',renderRoster);
+$('clearBtn').addEventListener('click',()=>{if(!Object.keys(state.draft).length)return;if(!confirm('Отметить всех присутствующими на этой паре?'))return;state.draft={};state.dirty=true;renderCounts();renderRoster()});
+async function saveLesson(){if(state.busy)return;state.busy=true;const btn=$('saveBtn');btn.disabled=true;btn.textContent='Сохраняем…';
+ try{const absences=Object.entries(state.draft).map(([studentId,reason])=>({studentId,reason}));await api('/api/lesson/save',{method:'POST',data:{date:state.date,pair:state.pair,absences}});
+  state.lessons=state.lessons.filter(l=>!(l.date===state.date&&l.pair===state.pair));state.lessons.push({date:state.date,pair:state.pair,updatedAt:new Date().toISOString()});
+  state.absences=state.absences.filter(a=>!(a.date===state.date&&a.pair===state.pair));state.absences.push(...absences.map(a=>({...a,date:state.date,pair:state.pair})));
+  state.dirty=false;renderCounts();renderHistory();renderStats();notify('✓ Пара сохранена в облаке');
+ }catch(err){notify('Не сохранено: '+err.message)}finally{state.busy=false;btn.disabled=false;btn.textContent='☁️ Сохранить пару'}
+}
+$('saveBtn').addEventListener('click',saveLesson);
+function renderHistory(){const list=$('historyList');list.replaceChildren();const lessons=[...state.lessons].sort((a,b)=>b.date.localeCompare(a.date)||a.pair-b.pair);
+ if(!lessons.length){list.innerHTML='<div class="empty"><div class="empty-emoji">🗓️</div>Сохранённых пар в этом учебном году пока нет.<br>Отметьте посещаемость и нажмите «Сохранить пару».</div>';return}
+ for(const item of lessons){const absent=state.absences.filter(x=>x.date===item.date&&x.pair===item.pair).length;const btn=document.createElement('button');btn.type='button';btn.className='history-item';
+  btn.innerHTML=`<div class="history-left"><b>${escapeHtml(dateRu(item.date))}</b><span>${item.pair} пара · ${absent?'Отмечены отсутствующие':'Все присутствовали'}</span></div><div class="history-right"><span class="history-badge">${absent} отс.</span><span>›</span></div>`;
+  btn.addEventListener('click',()=>{if(!canLeave())return;state.date=item.date;state.pair=item.pair;loadDraft();page('journal')});list.append(btn)
+ }
+}
+function getStats(){const map=new Map(state.students.map(s=>[s.id,{name:s.name,sick:0,family:0,unknown:0,total:0}]));for(const a of state.absences){const st=map.get(a.studentId);if(st&&Object.hasOwn(st,a.reason)){st[a.reason]++;st.total++}}return [...map.values()]}
+function renderStats(){const stats=getStats(),lessons=state.lessons.length,absences=state.absences.length,totalSlots=lessons*state.students.length;
+ $('totalLessons').textContent=lessons;$('totalAbsences').textContent=absences;$('avgAttendance').textContent=totalSlots?Math.max(0,Math.round(100*(totalSlots-absences)/totalSlots))+'%':'—';
+ const table=$('statsTable');table.replaceChildren();if(!lessons){table.innerHTML='<div class="empty">Пока нет сохранённых занятий.</div>';return}
+ const head=document.createElement('div');head.className='stats-row head';head.innerHTML='<span>Студент</span><span>Всего</span><span>Б</span><span>С</span><span>Н</span>';table.append(head);
+ for(const st of stats.sort((a,b)=>b.total-a.total||a.name.localeCompare(b.name,'ru'))){const row=document.createElement('div');row.className='stats-row';row.innerHTML=`<span class="name">${escapeHtml(st.name)}</span><b>${st.total}</b><span>${st.sick}</span><span>${st.family}</span><span>${st.unknown}</span>`;table.append(row)}
+}
+function download(name,body,type){const blob=new Blob([body],{type});const url=URL.createObjectURL(blob);const a=document.createElement('a');a.href=url;a.download=name;document.body.append(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),5000)}
+const csvCell=str=>'"'+String(str??'').replace(/"/g,'""')+'"';
+$('exportCsvBtn').addEventListener('click',()=>{
+ const rows=[['ФИО','Пропусков всего','Болеет','По семейным','Неизвестно','Сохранённых пар','Учебный год'],...getStats().map(s=>[s.name,s.total,s.sick,s.family,s.unknown,state.lessons.length,yearLabel(state.year)])];
+ download(`statistika_${state.year}.csv`,'\ufeff'+rows.map(row=>row.map(csvCell).join(';')).join('\r\n'),'text/csv;charset=utf-8');notify('CSV-файл сформирован');
+});
+$('exportJsonBtn').addEventListener('click',()=>{const doc={exportedAt:new Date().toISOString(),year:state.year,username:state.username,students:state.students,lessons:state.lessons,absences:state.absences};download(`journal_backup_${state.year}.json`,JSON.stringify(doc,null,2),'application/json;charset=utf-8');notify('Резервная копия скачана')});
+async function changeYear(next){if(!Number.isInteger(next)||next===state.year)return;if(!canLeave()){updateYearSelectors();return}state.year=next;state.date=next+'-09-01';state.pair=1;$('dateInput').value=state.date;try{await loadYear()}catch(err){notify(err.message)}}
+['yearInput','historyYear','statsYear'].forEach(id=>$(id).addEventListener('change',e=>changeYear(Number(e.target.value))));
+function page(name){state.page=name;['journal','history','stats','settings'].forEach(p=>$(p+'Page').classList.toggle('hidden',p!==name));
+ document.querySelectorAll('.navbtn').forEach(x=>x.classList.toggle('active',x.dataset.page===name));
+ const heads={journal:['Посещаемость','Отметьте отсутствующих на выбранной паре'],history:['История','Все сохранённые занятия за учебный год'],stats:['Статистика','Сводка посещаемости студентов'],settings:['Профиль и данные','Настройки и резервное копирование']};
+ $('viewTitle').textContent=heads[name][0];$('viewHint').textContent=heads[name][1];$('savebar').classList.toggle('hidden',name!=='journal');
+ if(name==='history')renderHistory();if(name==='stats')renderStats();window.scrollTo({top:0,behavior:'smooth'});
+}
+document.querySelectorAll('.navbtn').forEach(btn=>btn.addEventListener('click',()=>{if(btn.dataset.page!==state.page&&!canLeave())return;page(btn.dataset.page)}));
+$('logoutBtn').addEventListener('click',async()=>{if(!canLeave())return;if(!confirm('Выйти из аккаунта на этом устройстве?'))return;try{await api('/api/logout',{method:'POST'})}catch{}state.token='';localStorage.removeItem('journal_token');state.username='';state.students=[];state.lessons=[];state.absences=[];state.draft={};state.dirty=false;showScreen('authScreen');switchAuth('login');notify('Вы вышли из аккаунта')});
+async function init(){buildYears();$('dateInput').value=state.date;if(!state.server){setupScreen();return}if(!state.token){showScreen('authScreen');return}try{await loadYear();showScreen('appScreen');page('journal')}catch(e){if(!state.token)showScreen('authScreen');else{showScreen('authScreen');showError('authError','Не удалось загрузить данные: '+e.message)}}}
+init();
 </script>
 </body>
 </html>
